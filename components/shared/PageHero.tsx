@@ -3,7 +3,7 @@ import { cn } from "@/utils"
 
 interface PageHeroProps {
   title: string
-  description?: string
+  description?: React.ReactNode
   backgroundImage?: string
   className?: string
 }
