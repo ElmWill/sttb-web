@@ -292,7 +292,7 @@ export const Navbar = () => {
         {/* RIGHT ACTIONS */}
         <div className="hidden lg:flex items-center space-x-3 z-50">
           <Button variant="ghost" asChild className="font-medium transition-colors hover:text-primary hover:bg-primary/10">
-            <Link href="/dashboard">Portal</Link>
+            <Link href="/auth/login">Login</Link>
           </Button>
           <Button asChild className="rounded-full shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5">
             <Link href="/admisi/prosedur">Daftar Sekarang</Link>
@@ -336,7 +336,7 @@ export const Navbar = () => {
 
         <div className="w-full max-w-md mx-auto pt-6 border-t border-border mt-auto grid gap-3">
           <Button variant="outline" className="w-full justify-center text-base h-12" asChild onClick={() => setIsMobileMenuOpen(false)}>
-            <Link href="/dashboard">Portal Mahasiswa</Link>
+            <Link href="/auth/login">Login</Link>
           </Button>
           <Button className="w-full justify-center text-base h-12" asChild onClick={() => setIsMobileMenuOpen(false)}>
             <Link href="/admisi/prosedur">Daftar Sekarang</Link>
