@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@source "../components";
+@source "../pages";
+@source "../styles";
+
+@theme {
+  /* Colors based on STTB Brand Requirements */
+  --color-sttb-red: hsl(354, 85%, 44%);
+  --color-sttb-navy: hsl(220, 50%, 20%);
+  --color-sttb-light-blue: hsl(200, 80%, 70%);
+  --color-sttb-purple: hsl(280, 50%, 40%);
+  --color-sttb-white: hsl(0, 0%, 100%);
+
+  /* Base shadcn mappings */
+  --color-background: hsl(0, 0%, 100%);
+  --color-foreground: hsl(220, 50%, 10%);
+
+  --color-primary: var(--color-sttb-red);
+  --color-primary-foreground: hsl(0, 0%, 100%);
+
+  --color-secondary: var(--color-sttb-navy);
+  --color-secondary-foreground: hsl(0, 0%, 100%);
+
+  --color-accent: var(--color-sttb-light-blue);
+  --color-accent-foreground: var(--color-sttb-navy);
+
+  --color-destructive: hsl(0, 84%, 60%);
+  --color-destructive-foreground: hsl(0, 0%, 100%);
+
+  --color-muted: hsl(210, 40%, 96%);
+  --color-muted-foreground: hsl(215, 16%, 47%);
+
+  --color-card: hsl(0, 0%, 100%);
+  --color-card-foreground: hsl(220, 50%, 10%);
+
+  --color-popover: hsl(0, 0%, 100%);
+  --color-popover-foreground: hsl(220, 50%, 10%);
+
+  --color-border: hsl(214, 32%, 91%);
+  --color-input: hsl(214, 32%, 91%);
+  --color-ring: var(--color-sttb-red);
+
+  --radius-lg: 0.5rem;
+  --radius-md: calc(var(--radius-lg) - 2px);
+  --radius-sm: calc(var(--radius-lg) - 4px);
+}
+
+@layer base {
+  *, ::before, ::after {
+    border-color: var(--color-border);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-feature-settings: "rlig" 1, "calt" 1;
+    font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  }
+}
