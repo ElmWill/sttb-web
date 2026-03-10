@@ -1,4 +1,4 @@
-import { useSession } from "next-auth/react";
+import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/router";
 import { ReactNode, useEffect } from "react";
 
@@ -7,22 +7,23 @@ interface AuthorizeProps {
 }
 
 export const Authorize = ({ children }: AuthorizeProps) => {
-  const { data: session, status } = useSession();
+  const { isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (status === "unauthenticated") {
-      router.replace("/api/auth/signin"); // Or specific login page
+    if (!isLoading && !isAuthenticated) {
+      router.replace(`/auth/login?redirect=${encodeURIComponent(router.asPath)}`);
     }
-  }, [status, router]);
+  }, [isAuthenticated, isLoading, router]);
 
-  if (status === "loading") {
-    return <div className="p-8 text-center text-muted-foreground">Loading authentication...</div>;
+  if (isLoading) {
+    return <div className="p-8 text-center text-muted-foreground">Loading...</div>;
   }
 
-  if (status === "unauthenticated") {
+  if (!isAuthenticated) {
     return null;
   }
 
   return <>{children}</>;
 };
+

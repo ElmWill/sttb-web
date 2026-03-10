@@ -3,13 +3,22 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
-import { Menu, X, ChevronDown, GraduationCap, Building, BookOpen, HeartHandshake, Users, Info } from "lucide-react"
+import { Menu, X, ChevronDown, GraduationCap, BookOpen, HeartHandshake, Users, Info, LogIn, LogOut, LayoutDashboard } from "lucide-react"
+import { useAuth } from "@/contexts/AuthContext"
+import { usePermission } from "@/contexts/PermissionContext"
 
 export const Navbar = () => {
   const router = useRouter()
+  const { user, isAuthenticated, logout } = useAuth()
+  const { isAdmin } = usePermission()
   const [activeTab, setActiveTab] = useState<string>("")
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+
+  const handleLogout = () => {
+    logout()
+    router.push("/")
+  }
 
   // Close dropdown when route changes
   useEffect(() => {
@@ -291,12 +300,35 @@ export const Navbar = () => {
 
         {/* RIGHT ACTIONS */}
         <div className="hidden lg:flex items-center space-x-3 z-50">
-          <Button variant="ghost" asChild className="font-medium transition-colors hover:text-primary hover:bg-primary/10">
-            <Link href="/auth/login">Login</Link>
-          </Button>
-          <Button asChild className="rounded-full shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5">
-            <Link href="/admisi/prosedur">Daftar Sekarang</Link>
-          </Button>
+          {isAuthenticated ? (
+            <>
+              {isAdmin && (
+                <Button variant="ghost" size="sm" asChild className="font-medium hover:text-primary hover:bg-primary/10">
+                  <Link href="/dashboard">
+                    <LayoutDashboard className="h-4 w-4 mr-1.5" />
+                    Dashboard
+                  </Link>
+                </Button>
+              )}
+              <span className="text-sm text-muted-foreground hidden xl:block">{user?.name}</span>
+              <Button variant="outline" size="sm" onClick={handleLogout} className="gap-1.5">
+                <LogOut className="h-4 w-4" />
+                Keluar
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button variant="ghost" asChild className="font-medium transition-colors hover:text-primary hover:bg-primary/10">
+                <Link href="/auth/login">
+                  <LogIn className="h-4 w-4 mr-1.5" />
+                  Login
+                </Link>
+              </Button>
+              <Button asChild className="rounded-full shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5">
+                <Link href="/admisi/prosedur">Daftar Sekarang</Link>
+              </Button>
+            </>
+          )}
         </div>
 
         {/* MOBILE MENU TOGGLE */}
@@ -335,12 +367,27 @@ export const Navbar = () => {
         </div>
 
         <div className="w-full max-w-md mx-auto pt-6 border-t border-border mt-auto grid gap-3">
-          <Button variant="outline" className="w-full justify-center text-base h-12" asChild onClick={() => setIsMobileMenuOpen(false)}>
-            <Link href="/auth/login">Login</Link>
-          </Button>
-          <Button className="w-full justify-center text-base h-12" asChild onClick={() => setIsMobileMenuOpen(false)}>
-            <Link href="/admisi/prosedur">Daftar Sekarang</Link>
-          </Button>
+          {isAuthenticated ? (
+            <>
+              {isAdmin && (
+                <Button variant="outline" className="w-full justify-center text-base h-12" asChild onClick={() => setIsMobileMenuOpen(false)}>
+                  <Link href="/dashboard"><LayoutDashboard className="h-4 w-4 mr-2" />Dashboard</Link>
+                </Button>
+              )}
+              <Button variant="destructive" className="w-full justify-center text-base h-12" onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }}>
+                <LogOut className="h-4 w-4 mr-2" />Keluar ({user?.name})
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button variant="outline" className="w-full justify-center text-base h-12" asChild onClick={() => setIsMobileMenuOpen(false)}>
+                <Link href="/auth/login"><LogIn className="h-4 w-4 mr-2" />Login</Link>
+              </Button>
+              <Button className="w-full justify-center text-base h-12" asChild onClick={() => setIsMobileMenuOpen(false)}>
+                <Link href="/admisi/prosedur">Daftar Sekarang</Link>
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </header>

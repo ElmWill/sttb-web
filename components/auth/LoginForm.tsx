@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import Link from "next/link"
 import { BackendApiUrl } from "@/functions/BackendApiUrl"
 import { useRouter } from "next/router"
+import { useAuth } from "@/contexts/AuthContext"
 
 const schema = z.object({
   email: z.string().email("Masukkan email yang valid"),
@@ -26,6 +27,7 @@ export interface LoginResponse {
 
 export function LoginForm() {
   const router = useRouter()
+  const { login } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
 
@@ -50,18 +52,16 @@ export function LoginForm() {
         return
       }
       const loginData: LoginResponse = json
-      // Store token in localStorage for use in authenticated fetches
-      if (typeof window !== "undefined") {
-        localStorage.setItem("auth_token", loginData.token)
-        localStorage.setItem("auth_user", JSON.stringify({
-          userId: loginData.userId,
-          name: loginData.name,
-          email: loginData.email,
-          roleName: loginData.roleName,
-          permissions: loginData.permissions,
-        }))
-      }
-      // Redirect to dashboard or intended page
+      // Persist the user and their permissions via AuthContext
+      login({
+        userId: loginData.userId,
+        name: loginData.name,
+        email: loginData.email,
+        roleName: loginData.roleName,
+        token: loginData.token,
+        permissions: loginData.permissions,
+      })
+      // Redirect to intended page or dashboard
       const redirect = (router.query.redirect as string) || "/dashboard"
       router.push(redirect)
     } catch {
@@ -126,3 +126,4 @@ export function LoginForm() {
     </form>
   )
 }
+
