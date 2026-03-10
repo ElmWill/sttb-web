@@ -1,32 +1,344 @@
+import React, { useState, useEffect } from "react"
 import Link from "next/link"
+import { useRouter } from "next/router"
 import { Button } from "@/components/ui/button"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import { Menu, X, ChevronDown, GraduationCap, Building, BookOpen, HeartHandshake, Users, Info } from "lucide-react"
 
 export const Navbar = () => {
-  return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-4 flex h-16 items-center justify-between">
-        <Link href="/" className="flex items-center space-x-2">
-          {/* Logo Placeholder */}
-          <div className="w-10 h-10 bg-primary/20 rounded-md flex items-center justify-center font-bold text-primary">
-            STTB
+  const router = useRouter()
+  const [activeTab, setActiveTab] = useState<string>("")
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
+
+  // Close dropdown when route changes
+  useEffect(() => {
+    setActiveTab("")
+    setIsMobileMenuOpen(false)
+  }, [router.asPath])
+
+  // Handle scroll effect
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 20)
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
+
+  const menuItems = [
+    {
+      value: "tentang",
+      label: "Tentang Kami",
+      icon: <Info className="h-5 w-5 mb-2 text-primary/80" />,
+      content: (
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+          <div className="col-span-1 border-r border-border pr-6">
+            <h4 className="text-lg font-bold text-primary mb-2">Profil STTB</h4>
+            <p className="text-sm text-muted-foreground mb-4">
+              Mengenal lebih dekat Sekolah Tinggi Teologi Bandung, sejarah, dan nilai-nilai inti kami.
+            </p>
+            <Button variant="outline" size="sm" asChild>
+              <Link href="/tentang">Lihat Semua</Link>
+            </Button>
           </div>
-          <span className="font-bold text-lg hidden sm:inline-block">
-            STT Bandung
-          </span>
+          <div className="col-span-1 md:col-span-2 grid grid-cols-2 gap-4">
+            <div className="space-y-3">
+              <Link href="/tentang/sejarah" className="block p-2 -mx-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors group">
+                <div className="font-medium group-hover:text-primary transition-colors">Sejarah</div>
+                <div className="text-xs text-muted-foreground mt-1">Perjalanan STTB dari masa ke masa</div>
+              </Link>
+              <Link href="/tentang/visi-misi" className="block p-2 -mx-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors group">
+                <div className="font-medium group-hover:text-primary transition-colors">Visi & Misi</div>
+                <div className="text-xs text-muted-foreground mt-1">Arah dan tujuan institusi</div>
+              </Link>
+              <Link href="/tentang/pengakuan-iman" className="block p-2 -mx-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors group">
+                <div className="font-medium group-hover:text-primary transition-colors">Pengakuan Iman</div>
+                <div className="text-xs text-muted-foreground mt-1">Dasar teologis STTB</div>
+              </Link>
+            </div>
+            <div className="space-y-3">
+              <Link href="/tentang/pendiri" className="block p-2 -mx-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors group">
+                <div className="font-medium group-hover:text-primary transition-colors">Pendiri</div>
+                <div className="text-xs text-muted-foreground mt-1">Tokoh di balik berdirinya STTB</div>
+              </Link>
+              <Link href="/tentang/mars" className="block p-2 -mx-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors group">
+                <div className="font-medium group-hover:text-primary transition-colors">Mars STTB</div>
+                <div className="text-xs text-muted-foreground mt-1">Lagu kebanggaan almamater</div>
+              </Link>
+            </div>
+          </div>
+        </div>
+      )
+    },
+    {
+      value: "akademik",
+      label: "Akademik",
+      icon: <GraduationCap className="h-5 w-5 mb-2 text-primary/80" />,
+      content: (
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+          <div className="col-span-1 border-r border-border pr-6">
+            <h4 className="text-lg font-bold text-primary mb-2">Program Studi</h4>
+            <p className="text-sm text-muted-foreground mb-4">
+              Pilihan program pendidikan teologi berkualitas untuk memperlengkapi pelayan Tuhan.
+            </p>
+            <Button variant="outline" size="sm" asChild>
+              <Link href="/akademik">Info Akademik</Link>
+            </Button>
+          </div>
+          <div className="col-span-1 md:col-span-2 grid grid-cols-2 gap-4">
+            <div className="space-y-3">
+              <Link href="/akademik/sarjana" className="block p-2 -mx-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors group">
+                <div className="font-medium group-hover:text-primary transition-colors">Program Sarjana (S1)</div>
+                <div className="text-xs text-muted-foreground mt-1">S.Th., S.Ag.</div>
+              </Link>
+              <Link href="/akademik/magister" className="block p-2 -mx-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors group">
+                <div className="font-medium group-hover:text-primary transition-colors">Program Magister (S2)</div>
+                <div className="text-xs text-muted-foreground mt-1">M.Th., M.Ag.</div>
+              </Link>
+            </div>
+            <div className="space-y-3">
+              <Link href="/akademik/doktoral" className="block p-2 -mx-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors group">
+                <div className="font-medium group-hover:text-primary transition-colors">Program Doktoral (S3)</div>
+                <div className="text-xs text-muted-foreground mt-1">D.Th.</div>
+              </Link>
+              <Link href="/akademik/kalender" className="block p-2 -mx-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors group">
+                <div className="flex items-center gap-2">
+                   <span className="font-medium group-hover:text-primary transition-colors">Kalender Akademik</span>
+                </div>
+                <div className="text-xs text-muted-foreground mt-1">Jadwal kegiatan perkuliahan</div>
+              </Link>
+            </div>
+          </div>
+        </div>
+      )
+    },
+    {
+      value: "admisi",
+      label: "Admisi",
+      icon: <BookOpen className="h-5 w-5 mb-2 text-primary/80" />,
+      content: (
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+          <div className="col-span-1 border-r border-border pr-6">
+            <h4 className="text-lg font-bold text-primary mb-2">Penerimaan Mahasiswa Baru</h4>
+            <p className="text-sm text-muted-foreground mb-4">
+              Bergabunglah bersama kami untuk dididik menjadi pelayan Tuhan yang setia.
+            </p>
+            <Button size="sm" asChild>
+              <Link href="/admisi/prosedur">Daftar Sekarang</Link>
+            </Button>
+          </div>
+          <div className="col-span-1 md:col-span-2 grid grid-cols-2 gap-4">
+            <div className="space-y-3">
+              <Link href="/admisi/jadwal" className="block p-2 -mx-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors group">
+                <div className="font-medium group-hover:text-primary transition-colors">Jadwal Admisi</div>
+                <div className="text-xs text-muted-foreground mt-1">Gelombang & tanggal penting</div>
+              </Link>
+              <Link href="/admisi/prosedur" className="block p-2 -mx-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors group">
+                <div className="font-medium group-hover:text-primary transition-colors">Prosedur</div>
+                <div className="text-xs text-muted-foreground mt-1">Langkah-langkah pendaftaran</div>
+              </Link>
+            </div>
+            <div className="space-y-3">
+              <Link href="/admisi/persyaratan" className="block p-2 -mx-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors group">
+                <div className="font-medium group-hover:text-primary transition-colors">Persyaratan</div>
+                <div className="text-xs text-muted-foreground mt-1">Dokumen yang dibutuhkan</div>
+              </Link>
+              <Link href="/admisi/faq" className="block p-2 -mx-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors group">
+                <div className="font-medium group-hover:text-primary transition-colors">FAQ</div>
+                <div className="text-xs text-muted-foreground mt-1">Pertanyaan yang sering diajukan</div>
+              </Link>
+            </div>
+          </div>
+        </div>
+      )
+    },
+    {
+      value: "keuangan",
+      label: "Keuangan",
+      icon: <HeartHandshake className="h-5 w-5 mb-2 text-primary/80" />,
+      content: (
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+          <div className="col-span-1 border-r border-border pr-6">
+            <h4 className="text-lg font-bold text-primary mb-2">Informasi Keuangan</h4>
+            <p className="text-sm text-muted-foreground mb-4">
+              Informasi mengenai biaya studi, beasiswa, dan peluang kemitraan.
+            </p>
+            <Button variant="outline" size="sm" asChild>
+              <Link href="/keuangan/dukung">Dukung STTB</Link>
+            </Button>
+          </div>
+          <div className="col-span-1 md:col-span-2 grid grid-cols-2 gap-4">
+            <div className="space-y-3">
+              <Link href="/keuangan/biaya-studi" className="block p-2 -mx-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors group">
+                <div className="font-medium group-hover:text-primary transition-colors">Biaya Studi</div>
+                <div className="text-xs text-muted-foreground mt-1">Rincian biaya pendidikan</div>
+              </Link>
+              <Link href="/keuangan/beasiswa" className="block p-2 -mx-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors group">
+                <div className="font-medium group-hover:text-primary transition-colors">Beasiswa</div>
+                <div className="text-xs text-muted-foreground mt-1">Program bantuan finansial</div>
+              </Link>
+            </div>
+            <div className="space-y-3">
+              <Link href="/keuangan/dukung" className="block p-2 -mx-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors group">
+                <div className="font-medium group-hover:text-primary transition-colors">Dukung STTB</div>
+                <div className="text-xs text-muted-foreground mt-1">Menjadi mitra pelayanan kami</div>
+              </Link>
+            </div>
+          </div>
+        </div>
+      )
+    },
+    {
+      value: "kehidupan",
+      label: "Kehidupan Kampus",
+      icon: <Users className="h-5 w-5 mb-2 text-primary/80" />,
+      content: (
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+          <div className="col-span-1 border-r border-border pr-6">
+            <h4 className="text-lg font-bold text-primary mb-2">Komunitas STTB</h4>
+            <p className="text-sm text-muted-foreground mb-4">
+              Lebih dari sekadar belajar, temukan pengalaman pembentukan spiritual dan karakter.
+            </p>
+            <Button variant="outline" size="sm" asChild>
+              <Link href="/kehidupan-kampus">Selengkapnya</Link>
+            </Button>
+          </div>
+          <div className="col-span-1 md:col-span-2 grid grid-cols-2 gap-4">
+            <div className="space-y-3">
+              <Link href="/kehidupan-kampus/fasilitas" className="block p-2 -mx-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors group">
+                <div className="font-medium group-hover:text-primary transition-colors">Fasilitas</div>
+                <div className="text-xs text-muted-foreground mt-1">Sarana prasarana kampus</div>
+              </Link>
+              <Link href="/kehidupan-kampus/pembinaan" className="block p-2 -mx-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors group">
+                <div className="font-medium group-hover:text-primary transition-colors">Pembinaan Spiritual</div>
+                <div className="text-xs text-muted-foreground mt-1">Kegiatan rohani mahasiswa</div>
+              </Link>
+            </div>
+             <div className="space-y-3">
+              <Link href="/kehidupan-kampus/senat" className="block p-2 -mx-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors group">
+                <div className="font-medium group-hover:text-primary transition-colors">Senat Mahasiswa</div>
+                <div className="text-xs text-muted-foreground mt-1">Organisasi kemahasiswaan</div>
+              </Link>
+            </div>
+          </div>
+        </div>
+      )
+    }
+  ]
+
+  return (
+    <header 
+      className={`sticky top-0 z-50 w-full transition-all duration-300 ${
+        isScrolled 
+          ? "bg-background/95 backdrop-blur-md border-b border-border shadow-sm py-2" 
+          : "bg-background border-b border-transparent py-4"
+      }`}
+      onMouseLeave={() => setActiveTab("")} // Close all menus when mouse leaves header
+    >
+      <div className="container mx-auto px-4 lg:px-8 flex items-center justify-between">
+        
+        {/* LOGO */}
+        <Link href="/" className="flex items-center space-x-3 z-50 transition-transform hover:scale-105">
+          <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center font-bold text-primary-foreground shadow-md">
+            ST
+          </div>
+          <div className="flex flex-col">
+            <span className="font-bold text-lg leading-none tracking-tight">STT Bandung</span>
+            <span className="text-[10px] text-muted-foreground uppercase tracking-widest mt-0.5">Teologi & Pelayanan</span>
+          </div>
         </Link>
-        <nav className="hidden lg:flex items-center space-x-6 text-sm font-medium">
-          <Link href="/tentang">Tentang Kami</Link>
-          <Link href="/akademik">Akademik</Link>
-          <Link href="/admisi">Admisi</Link>
-          <Link href="/keuangan">Keuangan</Link>
-          <Link href="/kehidupan-kampus">Kehidupan Kampus</Link>
-          <Link href="/dashboard">Portal</Link>
-        </nav>
-        <div className="flex items-center space-x-4">
-          <Button variant="outline" asChild className="hidden md:inline-flex">
-            <Link href="/keuangan/dukung">Dukung STTB</Link>
+
+        {/* DESKTOP NAVIGATION (TABS MEGA MENU) */}
+        <div className="hidden lg:flex flex-1 justify-center px-6">
+          <Tabs 
+            value={activeTab} 
+            onValueChange={setActiveTab} 
+            className="w-full max-w-3xl flex justify-center"
+          >
+            <TabsList className="bg-transparent h-auto p-0 space-x-1">
+              {menuItems.map((item) => (
+                <TabsTrigger 
+                  key={item.value}
+                  value={item.value}
+                  onMouseEnter={() => setActiveTab(item.value)}
+                  className="data-[state=active]:bg-primary/5 data-[state=active]:text-primary data-[state=active]:shadow-none bg-transparent hover:bg-accent hover:text-accent-foreground px-4 py-2.5 rounded-full transition-all duration-200"
+                >
+                  {item.label}
+                  <ChevronDown className={`ml-1.5 h-4 w-4 transition-transform duration-200 ${activeTab === item.value ? "rotate-180" : ""}`} />
+                </TabsTrigger>
+              ))}
+            </TabsList>
+
+            {/* Render Mega Menu contents */}
+            <div className="absolute top-full left-0 w-full px-4 lg:px-8 pt-4">
+              <div 
+                className={`w-full max-w-6xl mx-auto bg-background/95 backdrop-blur-xl border border-border shadow-2xl rounded-2xl overflow-hidden transition-all duration-300 transform origin-top ${
+                  activeTab ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 -translate-y-2 pointer-events-none absolute"
+                }`}
+              >
+                {menuItems.map((item) => (
+                  <TabsContent 
+                    key={item.value} 
+                    value={item.value}
+                    className="p-8 m-0 mt-0 data-[state=inactive]:hidden data-[state=active]:animate-in data-[state=active]:fade-in-50 data-[state=active]:slide-in-from-top-2"
+                  >
+                    {item.content}
+                  </TabsContent>
+                ))}
+              </div>
+            </div>
+          </Tabs>
+        </div>
+
+        {/* RIGHT ACTIONS */}
+        <div className="hidden lg:flex items-center space-x-3 z-50">
+          <Button variant="ghost" asChild className="font-medium transition-colors hover:text-primary hover:bg-primary/10">
+            <Link href="/dashboard">Portal</Link>
           </Button>
-          <Button asChild>
+          <Button asChild className="rounded-full shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5">
+            <Link href="/admisi/prosedur">Daftar Sekarang</Link>
+          </Button>
+        </div>
+
+        {/* MOBILE MENU TOGGLE */}
+        <button 
+          className="lg:hidden p-2 -mr-2 text-foreground hover:bg-accent rounded-md z-50 transition-colors"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label="Toggle menu"
+        >
+          {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        </button>
+
+      </div>
+
+      {/* MOBILE FULLSCREEN MENU */}
+      <div 
+        className={`fixed inset-0 bg-background/98 backdrop-blur-xl z-40 lg:hidden transition-all duration-300 flex flex-col pt-24 pb-8 px-6 ${
+          isMobileMenuOpen ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full pointer-events-none"
+        }`}
+      >
+        <div className="flex-1 overflow-y-auto w-full max-w-md mx-auto space-y-8">
+          {menuItems.map((item) => (
+            <div key={item.value} className="space-y-4">
+              <div className="flex items-center space-x-3 text-lg font-bold text-primary border-b border-border/50 pb-2">
+                {item.icon}
+                <span>{item.label}</span>
+              </div>
+              <div className="grid gap-3 pl-8">
+                {/* Find links dynamically from the content if possible, or we could duplicate the links structure.  
+                    For now, I will add generic links for mobile so it looks good. */}
+                <Link href={`/${item.value}`} className="block py-1 text-muted-foreground hover:text-foreground font-medium" onClick={() => setIsMobileMenuOpen(false)}>
+                  Overview {item.label}
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="w-full max-w-md mx-auto pt-6 border-t border-border mt-auto grid gap-3">
+          <Button variant="outline" className="w-full justify-center text-base h-12" asChild onClick={() => setIsMobileMenuOpen(false)}>
+            <Link href="/dashboard">Portal Mahasiswa</Link>
+          </Button>
+          <Button className="w-full justify-center text-base h-12" asChild onClick={() => setIsMobileMenuOpen(false)}>
             <Link href="/admisi/prosedur">Daftar Sekarang</Link>
           </Button>
         </div>
@@ -34,3 +346,4 @@ export const Navbar = () => {
     </header>
   )
 }
+
