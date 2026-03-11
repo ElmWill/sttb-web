@@ -252,7 +252,7 @@ export const Navbar = () => {
           </div>
           <div className="flex flex-col">
             <span className="font-bold text-lg leading-none tracking-tight">STT Bandung</span>
-            <span className="text-[10px] text-muted-foreground uppercase tracking-widest mt-0.5">Teologi & Pelayanan</span>
+            <span className="text-[10px] text-muted-foreground uppercase tracking-widest mt-0.5">Bandung Theological Seminary</span>
           </div>
         </Link>
 
@@ -323,9 +323,6 @@ export const Navbar = () => {
                   <LogIn className="h-4 w-4 mr-1.5" />
                   Login
                 </Link>
-              </Button>
-              <Button asChild className="rounded-full shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5">
-                <Link href="/admisi/prosedur">Daftar Sekarang</Link>
               </Button>
             </>
           )}

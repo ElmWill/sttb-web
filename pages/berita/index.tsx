@@ -3,30 +3,29 @@ import Head from "next/head"
 import { AppSettings } from "@/functions/AppSettings"
 import { MainLayout } from "@/components/layouts/MainLayout"
 import { ContentList, ContentItem } from "@/components/shared/ContentList"
-import useSWR from "swr"
-import { useSwrFetcherWithAccessToken } from "@/functions/useSwrFetcherWithAccessToken"
-import { GetPostList } from "@/functions/BackendApiUrl"
-import { PagedResult, Post } from "@/types/Models"
+import { usePostList } from "@/components/berita/hooks/usePostData"
 
 export default function Berita() {
-  const fetcher = useSwrFetcherWithAccessToken();
-  const { data, isLoading, error } = useSWR<PagedResult<Post>>(
-    GetPostList(1), // Fetching page 1 initially
-    fetcher
-  );
+  const { posts: postItems, isLoading, error } = usePostList(1);
 
   // Map Backend Posts to the Frontend ContentItem shape
-  const posts: ContentItem[] = data?.items?.map((post) => ({
+  const posts: ContentItem[] = postItems.map((post) => ({
     slug: post.slug,
     title: post.title,
-    excerpt: post.content ? post.content.substring(0, 100) + "..." : "", // Simple excerpt
-    date: new Date(post.createdAt).toLocaleDateString("id-ID", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric"
-    }),
-    image: post.featuredImageId ? `/api/media/${post.featuredImageId}` : "/placeholders/berita-1.jpg", 
-  })) || [];
+    excerpt: post.excerpt || "",
+    date: post.publishedAt 
+      ? new Date(post.publishedAt).toLocaleDateString("id-ID", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric"
+        })
+      : new Date(post.createdAt).toLocaleDateString("id-ID", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric"
+        }),
+    image: "/placeholders/berita-1.jpg", 
+  }));
 
   return (
     <>
