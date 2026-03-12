@@ -4,10 +4,11 @@ import { tryFetchJson } from "../tryFetchJson";
 
 export const postsApi = {
   keys: {
-    list: (page: number, search?: string) => {
+    list: (page: number, search?: string, status?: string) => {
       const params = new URLSearchParams();
       params.append("pageNumber", page.toString());
       if (search) params.append("searchTerm", search);
+      if (status) params.append("status", status);
       return `${BackendApiUrl.getPostList}?${params.toString()}`;
     },
     detail: (id: number | string) => {

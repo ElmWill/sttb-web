@@ -5,14 +5,12 @@ import { PageContainer } from "@/components/layouts/PageContainer"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Calendar } from "lucide-react"
 import Link from "next/link"
-
-const recentNews = [
-  { id: 1, title: "Ibadah Pembukaan Semester Ganjil 2024", date: "15 Agu 2024", tag: "Akademik", image: "/placeholders/news-1.jpg" },
-  { id: 2, title: "Seminar Nasional Teologi Publik", date: "10 Agu 2024", tag: "Seminar", image: "/placeholders/news-2.jpg" },
-  { id: 3, title: "Penerimaan Mahasiswa Baru Gelombang Terakhir", date: "05 Agu 2024", tag: "Admisi", image: "/placeholders/news-3.jpg" },
-]
+import { usePostList } from "@/components/berita/hooks/usePostData"
 
 export const LatestNews = () => {
+  const { posts, isLoading } = usePostList(1);
+  const latestPosts = posts.slice(0, 3);
+
   return (
     <PageContainer>
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-8">
@@ -28,24 +26,46 @@ export const LatestNews = () => {
         </Button>
       </div>
 
+      {isLoading ? (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {[1, 2, 3].map((i) => (
+            <Card key={i} className="h-full overflow-hidden animate-pulse">
+              <div className="h-48 bg-muted w-full" />
+              <CardHeader className="p-5 pb-2">
+                <div className="h-3 bg-muted rounded w-1/3 mb-3" />
+                <div className="h-5 bg-muted rounded w-full mb-2" />
+                <div className="h-5 bg-muted rounded w-2/3" />
+              </CardHeader>
+            </Card>
+          ))}
+        </div>
+      ) : latestPosts.length === 0 ? null : (
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {recentNews.map((news) => (
-          <Link href={`/berita/${news.id}`} key={news.id} className="group block">
+        {latestPosts.map((news) => {
+          const slug = news.slug || news.Slug || String(news.postId || news.PostId);
+          const tag = news.categories?.[0] || "";
+          const rawDate = news.publishedAt || news.PublishedAt || news.createdAt || news.CreatedAt || "";
+          const date = rawDate
+            ? new Date(rawDate).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" })
+            : "";
+          return (
+          <Link href={`/berita/${slug}`} key={news.postId || slug} className="group block">
             <Card className="h-full overflow-hidden border-transparent shadow-sm hover:shadow-md transition-all group-hover:border-primary/20">
               <div className="h-48 bg-muted w-full relative overflow-hidden">
-                {/* Image Placeholder */}
                 <div className="absolute inset-0 bg-secondary/10 group-hover:bg-transparent transition-colors" />
-                <div className="absolute top-4 left-4 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full z-10">
-                  {news.tag}
-                </div>
+                {tag && (
+                  <div className="absolute top-4 left-4 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full z-10">
+                    {tag}
+                  </div>
+                )}
               </div>
               <CardHeader className="p-5 pb-2">
                 <div className="flex items-center text-xs text-muted-foreground mb-2">
                   <Calendar className="w-3 h-3 mr-1" />
-                  {news.date}
+                  {date}
                 </div>
                 <CardTitle className="text-xl group-hover:text-primary transition-colors line-clamp-2">
-                  {news.title}
+                  {news.title || news.Title}
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-5 pt-0">
@@ -55,8 +75,10 @@ export const LatestNews = () => {
               </CardContent>
             </Card>
           </Link>
-        ))}
+          );
+        })}
       </div>
+      )}
     </PageContainer>
   )
 }

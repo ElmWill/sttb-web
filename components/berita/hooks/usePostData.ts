@@ -6,7 +6,7 @@ import { Post, PostListItem, PagedResult } from "@/types/Models";
 export const usePostList = (page = 1, search?: string) => {
   const fetcher = useSwrFetcherWithAccessToken();
   const { data, error, isLoading, mutate } = useSWR<PagedResult<PostListItem>>(
-    postsApi.keys.list(page, search),
+    postsApi.keys.list(page, search, "Published"),
     fetcher,
   );
 
