@@ -4,6 +4,7 @@ import { useSwrFetcherWithAccessToken } from "@/functions/useSwrFetcherWithAcces
 import { useFetchWithAccessToken } from "@/functions/useFetchWithAccessToken";
 import { BackendApiUrl, GetMediaList } from "@/functions/BackendApiUrl";
 import { Media, PagedResult } from "@/types/Models";
+import { useAuth } from "@/contexts/AuthContext";
 
 export interface UseMediaDataReturn {
   data: Media[];
@@ -21,6 +22,7 @@ export interface UseMediaDataReturn {
 export const useMediaData = (page: number, search?: string): UseMediaDataReturn => {
   const fetcher = useSwrFetcherWithAccessToken();
   const { fetchDELETE } = useFetchWithAccessToken();
+  const { user } = useAuth();
 
   const { data: response, mutate, isLoading, error } = useSWR<PagedResult<Media>>(
     GetMediaList(page, search),
@@ -41,12 +43,10 @@ export const useMediaData = (page: number, search?: string): UseMediaDataReturn 
       // We might need to use a raw fetch or verify how useFetchWithAccessToken handles it.
       // Looking at useFetchWithAccessToken.ts (earlier viewed), it usually JSON.stringifies the body.
       
-      const token = localStorage.getItem("accessToken");
+      const token = user?.token;
       const res = await fetch(BackendApiUrl.uploadMedia, {
         method: "POST",
-        headers: {
-          "Authorization": `Bearer ${token}`
-        },
+        headers: token ? { "Authorization": `Bearer ${token}` } : {},
         body: formData
       });
 
@@ -60,7 +60,7 @@ export const useMediaData = (page: number, search?: string): UseMediaDataReturn 
     } finally {
       setIsUploading(false);
     }
-  }, [mutate]);
+  }, [mutate, user]);
 
   const onDelete = useCallback(async (id: number) => {
     setIsDeleting(true);
@@ -79,8 +79,8 @@ export const useMediaData = (page: number, search?: string): UseMediaDataReturn 
   }, [fetchDELETE, mutate]);
 
   return {
-    data: response?.items || [],
-    totalCount: response?.totalCount || 0,
+    data: response?.media || (response as any)?.Media || [],
+    totalCount: response?.totalCount || (response as any)?.TotalCount || 0,
     isLoading,
     error,
     actions: { onUpload, onDelete },

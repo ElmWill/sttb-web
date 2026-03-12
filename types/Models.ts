@@ -104,16 +104,20 @@ export interface Media {
     mediaId: number;
     fileName: string;
     filePath: string;
+    fileUrl: string;
     fileType: string;
     fileSize: number;
     uploadedBy: number;
+    uploadedByName?: string;
     createdAt: string;
     // PascalCase fallbacks
     MediaId?: number;
     FileName?: string;
     FilePath?: string;
+    FileUrl?: string;
     FileType?: string;
     FileSize?: number;
+    UploadedByName?: string;
     CreatedAt?: string;
 
     // legacy/generic compatibility
@@ -187,6 +191,8 @@ export interface StudyProgramListItem {
     // PascalCase fallbacks
     ProgramId?: number;
     ProgramName?: string;
+    DegreeLevel?: string;
+    DegreeTitle?: string;
     Description?: string;
     Slug?: string;
 }
@@ -198,6 +204,7 @@ export interface PagedResult<T> {
     programs?: T[]; // For GetStudyProgramListResponse
     pages?: T[]; // For GetPageListResponse
     courses?: T[]; // For GetCourseListResponse
+    media?: T[]; // For GetMediaListResponse
     totalCount: number;
     pageNumber: number;
     pageSize: number;

@@ -44,7 +44,7 @@ export const BackendApiUrl = {
   // Media
   getMediaList: baseUrl + "/api/Media/list",
   getMediaById: baseUrl + "/api/Media", // GET /{mediaId}
-  uploadMedia: baseUrl + "/api/Media/upload",
+  uploadMedia: "/api/media-upload", // dedicated route that properly forwards multipart/form-data
   deleteMedia: baseUrl + "/api/Media", // DELETE /{mediaId}
 
   // Menus (Navigation)
@@ -107,14 +107,14 @@ export function GetStudyProgramList(page: number, search?: string) {
 
 export function GetCourseList(page: number, search?: string) {
   const param = new URLSearchParams();
-  param.append("page", page.toString());
-  if (search) param.append("search", search);
+  param.append("pageNumber", page.toString());
+  if (search) param.append("searchTerm", search);
   return BackendApiUrl.getCourseList + "?" + param.toString();
 }
 
 export function GetMediaList(page: number, search?: string) {
   const param = new URLSearchParams();
-  param.append("page", page.toString());
-  if (search) param.append("search", search);
+  param.append("pageNumber", page.toString());
+  if (search) param.append("searchTerm", search);
   return BackendApiUrl.getMediaList + "?" + param.toString();
 }

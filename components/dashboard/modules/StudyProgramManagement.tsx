@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useStudyProgramData } from "../hooks/useStudyProgramData";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Plus, Search, Edit2, Trash2, GraduationCap, Loader2 } from "lucide-react";
+import { Plus, Search, Edit2, Trash2, GraduationCap, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -32,7 +32,17 @@ type FormData = {
 
 export default function StudyProgramManagement() {
   const [page, setPage] = useState(1);
+  const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearch(searchInput);
+      setPage(1);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
   const { data, totalCount, isLoading, actions, isCreating, isUpdating, isDeleting } = useStudyProgramData(page, search);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -108,8 +118,8 @@ export default function StudyProgramManagement() {
           type="text"
           placeholder="Cari nama prodi..."
           className="bg-transparent border-none outline-none text-sm w-full"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
         />
       </div>
 
@@ -169,6 +179,22 @@ export default function StudyProgramManagement() {
           </TableBody>
         </Table>
       </div>
+
+      {totalCount > 0 && (
+        <div className="flex items-center justify-between text-sm">
+          <p className="text-muted-foreground">
+            Menampilkan {Math.min((page - 1) * 10 + 1, totalCount)}–{Math.min(page * 10, totalCount)} dari {totalCount} data
+          </p>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={() => setPage(p => p - 1)} disabled={page === 1}>
+              <ChevronLeft className="w-4 h-4" /> Sebelumnya
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => setPage(p => p + 1)} disabled={page * 10 >= totalCount}>
+              Berikutnya <ChevronRight className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+      )}
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="sm:max-w-[500px]">

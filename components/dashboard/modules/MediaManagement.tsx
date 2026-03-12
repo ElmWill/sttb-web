@@ -1,16 +1,25 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useMediaData } from "../hooks/useMediaData";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Image as ImageIcon, Upload, Trash2, Search, Loader2, FileIcon, FileText, CheckCircle2 } from "lucide-react";
+import { Image as ImageIcon, Upload, Trash2, Search, Loader2, FileIcon, FileText, CheckCircle2, ChevronLeft, ChevronRight } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function MediaManagement() {
   const [page, setPage] = useState(1);
+  const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const { data, totalCount, isLoading, actions, isUploading, isDeleting } = useMediaData(page, search);
   const { user } = useAuth();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearch(searchInput);
+      setPage(1);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadStatus, setUploadStatus] = useState<{ success: boolean; message: string } | null>(null);
 
@@ -100,8 +109,8 @@ export default function MediaManagement() {
           type="text"
           placeholder="Cari file..."
           className="bg-transparent border-none outline-none text-sm w-full"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
         />
       </div>
 
@@ -140,7 +149,7 @@ export default function MediaManagement() {
                     <div className="w-10 h-10 rounded border bg-muted flex items-center justify-center overflow-hidden">
                       {item.fileType?.startsWith("image/") ? (
                         <img 
-                          src={item.filePath} 
+                          src={item.fileUrl || item.filePath} 
                           alt={item.fileName} 
                           className="w-full h-full object-cover"
                           onError={(e) => {
@@ -180,6 +189,22 @@ export default function MediaManagement() {
           </TableBody>
         </Table>
       </div>
+
+      {totalCount > 0 && (
+        <div className="flex items-center justify-between text-sm">
+          <p className="text-muted-foreground">
+            Menampilkan {Math.min((page - 1) * 10 + 1, totalCount)}–{Math.min(page * 10, totalCount)} dari {totalCount} file
+          </p>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={() => setPage(p => p - 1)} disabled={page === 1}>
+              <ChevronLeft className="w-4 h-4" /> Sebelumnya
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => setPage(p => p + 1)} disabled={page * 10 >= totalCount}>
+              Berikutnya <ChevronRight className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+      )}
 
       <div className="p-4 bg-muted/30 rounded-lg border border-dashed text-center">
         <p className="text-xs text-muted-foreground italic">
