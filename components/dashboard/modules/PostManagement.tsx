@@ -327,10 +327,12 @@ export default function PostManagement() {
               <div className="space-y-2">
                 <label className="text-sm font-medium">Gambar Utama</label>
                 <input ref={imageInputRef} type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
-                {form.featuredImageUrl ? (
+                {(form.featuredImageId || form.featuredImageUrl) ? (
                   <div className="relative w-full h-40 rounded-md overflow-hidden border bg-muted group">
                     <img
-                      src={resolveImgSrc(form.featuredImageUrl)}
+                      src={form.featuredImageId
+                        ? `/api/media-file/${form.featuredImageId}`
+                        : resolveImgSrc(form.featuredImageUrl!)}
                       alt="Featured"
                       className="w-full h-full object-cover"
                     />
@@ -354,7 +356,7 @@ export default function PostManagement() {
                     )}
                   </div>
                 )}
-                {form.featuredImageUrl && (
+                {(form.featuredImageId || form.featuredImageUrl) && (
                   <Button type="button" variant="outline" size="sm" onClick={() => imageInputRef.current?.click()} disabled={isUploadingImage}>
                     {isUploadingImage ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <ImageIcon className="w-4 h-4 mr-2" />}
                     Ganti Gambar

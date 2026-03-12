@@ -149,7 +149,7 @@ export default function MediaManagement() {
                     <div className="w-10 h-10 rounded border bg-muted flex items-center justify-center overflow-hidden">
                       {item.fileType?.startsWith("image/") ? (
                         <img 
-                          src={item.fileUrl || item.filePath} 
+                          src={`/api/media-file/${item.mediaId || item.id}`}
                           alt={item.fileName} 
                           className="w-full h-full object-cover"
                           onError={(e) => {

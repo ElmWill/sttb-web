@@ -38,7 +38,11 @@ export default function BeritaDetail() {
       <ContentDetail 
         title={title}
         date={date}
-        image={post?.featuredImageUrl || "/placeholders/berita-hero.jpg"}
+        image={
+          (post?.featuredImageId || (post as any)?.FeaturedImageId)
+            ? `/api/media-file/${post?.featuredImageId || (post as any)?.FeaturedImageId}`
+            : post?.featuredImageUrl || "/placeholders/berita-hero.jpg"
+        }
         backPath="berita"
         backLabel="Kembali ke Daftar Berita"
         content={
