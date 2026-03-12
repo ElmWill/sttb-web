@@ -62,8 +62,17 @@ export function LoginForm() {
         permissions: loginData.permissions,
       });
       // Redirect to intended page or dashboard
-      const redirect = (router.query.redirect as string) || "/";
-      router.push(redirect);
+      // Admin/SuperAdmin should be redirected to dashboard if no specific redirect is provided or even if specific redirect to home
+      const role = loginData.roleName.toLowerCase();
+      const redirect = router.query.redirect as string | undefined;
+
+      if (role === "admin" || role === "superadmin") {
+        router.replace("/dashboard");
+      } else if (redirect) {
+        router.replace(redirect);
+      } else {
+        router.replace("/");
+      }
     } catch {
       setServerError("Gagal terhubung ke server. Periksa koneksi Anda.");
     } finally {

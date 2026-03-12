@@ -65,9 +65,25 @@ export const BackendApiUrl = {
   getStudyProgramList: baseUrl + "/api/StudyPrograms/list",
   getStudyProgramById: baseUrl + "/api/StudyPrograms", // GET /{programId}
   getStudyProgramBySlug: baseUrl + "/api/StudyPrograms/slug", // GET /{slug}
+  createStudyProgram: baseUrl + "/api/StudyPrograms/create",
+  updateStudyProgram: baseUrl + "/api/StudyPrograms/update",
+  deleteStudyProgram: baseUrl + "/api/StudyPrograms", // DELETE /{programId}
+
+  // Courses
+  getCourseList: baseUrl + "/api/Courses/list",
+  createCourse: baseUrl + "/api/Courses/create",
+  updateCourse: baseUrl + "/api/Courses/update",
+  deleteCourse: baseUrl + "/api/Courses", // DELETE /{courseId}
 };
 
-// URL builder functions mapped to the real APIs
+// URL builder functions for parameterized endpoints
+export function GetUserList(page: number, search: string) {
+  const param = new URLSearchParams();
+  param.append("page", page.toString());
+  if (search) param.append("search", search);
+  return BackendApiUrl.getUserList + "?" + param.toString();
+}
+
 export function GetPostList(page: number, search?: string) {
   const param = new URLSearchParams();
   param.append("page", page.toString());
@@ -87,4 +103,18 @@ export function GetStudyProgramList(page: number, search?: string) {
   param.append("pageNumber", page.toString());
   if (search) param.append("searchTerm", search);
   return BackendApiUrl.getStudyProgramList + "?" + param.toString();
+}
+
+export function GetCourseList(page: number, search?: string) {
+  const param = new URLSearchParams();
+  param.append("page", page.toString());
+  if (search) param.append("search", search);
+  return BackendApiUrl.getCourseList + "?" + param.toString();
+}
+
+export function GetMediaList(page: number, search?: string) {
+  const param = new URLSearchParams();
+  param.append("page", page.toString());
+  if (search) param.append("search", search);
+  return BackendApiUrl.getMediaList + "?" + param.toString();
 }

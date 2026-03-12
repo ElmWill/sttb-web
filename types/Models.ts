@@ -101,14 +101,24 @@ export interface Category {
 }
 
 export interface Media {
-    id: number;
+    mediaId: number;
     fileName: string;
-    contentType: string;
-    sizeBytes: number;
-    uploadedAt: string;
+    filePath: string;
+    fileType: string;
+    fileSize: number;
+    uploadedBy: number;
+    createdAt: string;
     // PascalCase fallbacks
-    Id?: number;
+    MediaId?: number;
     FileName?: string;
+    FilePath?: string;
+    FileType?: string;
+    FileSize?: number;
+    CreatedAt?: string;
+
+    // legacy/generic compatibility
+    id?: number;
+    sizeBytes?: number;
 }
 
 export interface Course {
@@ -129,6 +139,15 @@ export interface CourseCategory {
     CategoryId?: number;
     CategoryName?: string;
     Courses?: Course[];
+}
+
+export interface CourseListItem {
+    courseId: number;
+    courseName: string;
+    description?: string;
+    // PascalCase fallbacks
+    CourseId?: number;
+    CourseName?: string;
 }
 
 export interface StudyProgram {
@@ -178,6 +197,7 @@ export interface PagedResult<T> {
     posts?: T[]; // For GetPostListResponse
     programs?: T[]; // For GetStudyProgramListResponse
     pages?: T[]; // For GetPageListResponse
+    courses?: T[]; // For GetCourseListResponse
     totalCount: number;
     pageNumber: number;
     pageSize: number;
