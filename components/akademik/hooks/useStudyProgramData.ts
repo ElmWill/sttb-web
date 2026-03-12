@@ -4,10 +4,10 @@ import { studyProgramApi } from "@/functions/api/studyProgramApi";
 import { StudyProgram, StudyProgramListItem, PagedResult } from "@/types/Models";
 import { GetStudyProgramList } from "@/functions/BackendApiUrl";
 
-export const useStudyProgramList = () => {
+export const useStudyProgramList = (degreeLevel?: string) => {
   const fetcher = useSwrFetcherWithAccessToken();
   const { data, error, isLoading, mutate } = useSWR<PagedResult<StudyProgramListItem>>(
-    GetStudyProgramList(1),
+    GetStudyProgramList(1, undefined, degreeLevel),
     fetcher
   );
 

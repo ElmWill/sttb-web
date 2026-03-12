@@ -98,10 +98,11 @@ export function GetPageList(page: number, search?: string) {
   return BackendApiUrl.getPageList + "?" + param.toString();
 }
 
-export function GetStudyProgramList(page: number, search?: string) {
+export function GetStudyProgramList(page: number, search?: string, degreeLevel?: string) {
   const param = new URLSearchParams();
   param.append("pageNumber", page.toString());
   if (search) param.append("searchTerm", search);
+  if (degreeLevel) param.append("degreeLevel", degreeLevel);
   return BackendApiUrl.getStudyProgramList + "?" + param.toString();
 }
 

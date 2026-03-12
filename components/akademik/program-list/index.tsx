@@ -14,7 +14,7 @@ import { StudyProgramListItem } from "@/types/Models";
 
 import { useStudyProgramList } from "../hooks/useStudyProgramData";
 
-function ProgramCard({ p }: { p: StudyProgramListItem }) {
+export function ProgramCard({ p }: { p: StudyProgramListItem }) {
   const name = p.programName || p.ProgramName || "";
   const desc = p.description || p.Description || "";
   const slug = p.slug || p.Slug || p.programId || p.ProgramId;
@@ -72,8 +72,8 @@ export default function ProgramListFeature() {
     groups[level].push(p);
   });
 
-  // Preferred display order: S1 before S2
-  const levelOrder = ["S1", "S2"];
+  // Preferred display order: S1 before S2 before S3
+  const levelOrder = ["S1", "S2", "S3"];
   const sortedLevels = Object.keys(groups).sort((a, b) => {
     const ai = levelOrder.indexOf(a);
     const bi = levelOrder.indexOf(b);
@@ -86,6 +86,7 @@ export default function ProgramListFeature() {
   const levelLabel: Record<string, string> = {
     S1: "Program Sarjana (S1)",
     S2: "Program Magister (S2)",
+    S3: "Program Doktoral (S3)",
   };
 
   return (
