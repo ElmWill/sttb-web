@@ -74,6 +74,23 @@ export const BackendApiUrl = {
   createCourse: baseUrl + "/api/Courses/create",
   updateCourse: baseUrl + "/api/Courses/update",
   deleteCourse: baseUrl + "/api/Courses", // DELETE /{courseId}
+
+  // Events (Kegiatan)
+  getEventList: baseUrl + "/api/Events/list",
+  getEventById: baseUrl + "/api/Events",       // GET /{eventId}
+  getEventBySlug: baseUrl + "/api/Events/slug", // GET /{slug}
+  createEvent: baseUrl + "/api/Events/create",
+  updateEvent: baseUrl + "/api/Events/update",
+  deleteEvent: baseUrl + "/api/Events",        // DELETE /{eventId}
+  publishEvent: baseUrl + "/api/Events",       // POST /{eventId}/publish
+
+  // Academic Calendars (Kalender Akademik)
+  getAcademicCalendarList: baseUrl + "/api/AcademicCalendars/list",
+  getAcademicCalendarById: baseUrl + "/api/AcademicCalendars",       // GET /{id}
+  getAcademicCalendarBySlug: baseUrl + "/api/AcademicCalendars/slug", // GET /{slug}
+  createAcademicCalendar: baseUrl + "/api/AcademicCalendars/create",
+  updateAcademicCalendar: baseUrl + "/api/AcademicCalendars/update",
+  deleteAcademicCalendar: baseUrl + "/api/AcademicCalendars",        // DELETE /{id}
 };
 
 // URL builder functions for parameterized endpoints
@@ -118,4 +135,21 @@ export function GetMediaList(page: number, search?: string) {
   param.append("pageNumber", page.toString());
   if (search) param.append("searchTerm", search);
   return BackendApiUrl.getMediaList + "?" + param.toString();
+}
+
+export function GetEventList(page: number, search?: string, status?: string) {
+  const param = new URLSearchParams();
+  param.append("pageNumber", page.toString());
+  if (search) param.append("searchTerm", search);
+  if (status) param.append("status", status);
+  return BackendApiUrl.getEventList + "?" + param.toString();
+}
+
+export function GetAcademicCalendarList(page: number, search?: string, semester?: string, academicYear?: string) {
+  const param = new URLSearchParams();
+  param.append("pageNumber", page.toString());
+  if (search) param.append("searchTerm", search);
+  if (semester) param.append("semester", semester);
+  if (academicYear) param.append("academicYear", academicYear);
+  return BackendApiUrl.getAcademicCalendarList + "?" + param.toString();
 }

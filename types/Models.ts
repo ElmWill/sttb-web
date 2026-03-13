@@ -197,6 +197,111 @@ export interface StudyProgramListItem {
     Slug?: string;
 }
 
+export interface Event {
+    eventId: number;
+    title: string;
+    slug: string;
+    description?: string;
+    location?: string;
+    startDate: string;
+    endDate?: string;
+    featuredImageId?: number;
+    featuredImageUrl?: string;
+    status: string;
+    createdBy?: number;
+    updatedBy?: number;
+    createdAt: string;
+    updatedAt?: string;
+    // PascalCase fallbacks
+    EventId?: number;
+    Title?: string;
+    Slug?: string;
+    Description?: string;
+    Location?: string;
+    StartDate?: string;
+    EndDate?: string;
+    FeaturedImageId?: number;
+    FeaturedImageUrl?: string;
+    Status?: string;
+    CreatedAt?: string;
+}
+
+export interface EventListItem {
+    eventId: number;
+    title: string;
+    slug: string;
+    description?: string;
+    location?: string;
+    startDate: string;
+    endDate?: string;
+    featuredImageId?: number;
+    status: string;
+    createdAt: string;
+    // PascalCase fallbacks
+    EventId?: number;
+    Title?: string;
+    Slug?: string;
+    Location?: string;
+    StartDate?: string;
+    EndDate?: string;
+    Status?: string;
+    CreatedAt?: string;
+}
+
+export interface AcademicCalendar {
+    academicCalendarId: number;
+    title: string;
+    slug: string;
+    description?: string;
+    academicYear?: string;
+    semester?: string;
+    eventType?: string;
+    startDate: string;
+    endDate?: string;
+    status: string;
+    createdBy?: number;
+    updatedBy?: number;
+    createdAt: string;
+    updatedAt?: string;
+    // PascalCase fallbacks
+    AcademicCalendarId?: number;
+    Title?: string;
+    Slug?: string;
+    Description?: string;
+    AcademicYear?: string;
+    Semester?: string;
+    EventType?: string;
+    StartDate?: string;
+    EndDate?: string;
+    Status?: string;
+    CreatedAt?: string;
+}
+
+export interface AcademicCalendarListItem {
+    academicCalendarId: number;
+    title: string;
+    slug: string;
+    description?: string;
+    academicYear?: string;
+    semester?: string;
+    eventType?: string;
+    startDate: string;
+    endDate?: string;
+    status: string;
+    createdAt: string;
+    // PascalCase fallbacks
+    AcademicCalendarId?: number;
+    Title?: string;
+    Slug?: string;
+    AcademicYear?: string;
+    Semester?: string;
+    EventType?: string;
+    StartDate?: string;
+    EndDate?: string;
+    Status?: string;
+    CreatedAt?: string;
+}
+
 // Common generic shape expected from STTB Backend
 export interface PagedResult<T> {
     items?: T[]; // Generic fallback
@@ -205,6 +310,8 @@ export interface PagedResult<T> {
     pages?: T[]; // For GetPageListResponse
     courses?: T[]; // For GetCourseListResponse
     media?: T[]; // For GetMediaListResponse
+    events?: T[]; // For GetEventListResponse
+    academicCalendars?: T[]; // For GetAcademicCalendarListResponse
     totalCount: number;
     pageNumber: number;
     pageSize: number;
@@ -214,5 +321,7 @@ export interface PagedResult<T> {
     Posts?: T[];
     Programs?: T[];
     Pages?: T[];
+    Events?: T[];
+    AcademicCalendars?: T[];
     TotalCount?: number;
 }

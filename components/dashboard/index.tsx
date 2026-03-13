@@ -2,7 +2,7 @@ import React from "react";
 import { PageContainer } from "@/components/layouts/PageContainer";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { FileText, Users, Calendar, Megaphone, LayoutDashboard, UserPlus, BookOpen, GraduationCap, Image as ImageIcon } from "lucide-react";
+import { FileText, Users, Calendar, Megaphone, LayoutDashboard, UserPlus, BookOpen, GraduationCap, Image as ImageIcon, CalendarDays, CalendarRange } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProtectedRoute from "../auth/ProtectedRoute";
 import PostManagement from "./modules/PostManagement";
@@ -10,6 +10,8 @@ import AdminRegistration from "./modules/AdminRegistration";
 import StudyProgramManagement from "./modules/StudyProgramManagement";
 import CourseManagement from "./modules/CourseManagement";
 import MediaManagement from "./modules/MediaManagement";
+import EventManagement from "./modules/EventManagement";
+import AcademicCalendarManagement from "./modules/AcademicCalendarManagement";
 
 const StatCard = ({
   title,
@@ -72,6 +74,14 @@ export default function DashboardFeature() {
               <TabsTrigger value="media" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground py-2 px-4">
                 <ImageIcon className="w-4 h-4 mr-2" />
                 Media
+              </TabsTrigger>
+              <TabsTrigger value="events" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground py-2 px-4">
+                <CalendarDays className="w-4 h-4 mr-2" />
+                Kegiatan
+              </TabsTrigger>
+              <TabsTrigger value="academic-calendar" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground py-2 px-4">
+                <CalendarRange className="w-4 h-4 mr-2" />
+                Kalender Akademik
               </TabsTrigger>
             </TabsList>
 
@@ -167,6 +177,22 @@ export default function DashboardFeature() {
               <Card>
                 <CardContent className="pt-6">
                   <MediaManagement />
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="events" className="animate-in slide-in-from-left-2 duration-300">
+              <Card>
+                <CardContent className="pt-6">
+                  <EventManagement />
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="academic-calendar" className="animate-in slide-in-from-left-2 duration-300">
+              <Card>
+                <CardContent className="pt-6">
+                  <AcademicCalendarManagement />
                 </CardContent>
               </Card>
             </TabsContent>
