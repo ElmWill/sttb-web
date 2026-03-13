@@ -26,24 +26,20 @@ export default function YayasanFeature() {
     <>
       <PageContainer className="max-w-4xl">
         <div className="mb-12 text-lg text-muted-foreground leading-relaxed text-center">
-          <p>
-            Yayasan Sekolah Tinggi Teologi Bandung didirikan sebagai badan hukum penyelenggara yang menaungi seluruh aktivitas Tri Dharma Perguruan Tinggi di STTB. Yayasan bertanggung jawab atas tata kelola fundamental, pengembangan fasilitas, dan arah masa depan institusi.
-          </p>
         </div>
-
         <BoardSection 
           title="Dewan Pembina" 
-          members={["Pdt. Dr. Abraham Tio (Ketua)", "Pdt. Yohanes Halim", "Dr. Handoko Lie"]} 
+          members={["Pdt. Agus Gunawan,Ph.D.","Pnt. Subianto Tjandra", "Pdt. Budiyanto Santosa"]} 
         />
         
         <BoardSection 
           title="Dewan Pengurus" 
-          members={["Bpk. Samuel Setiawan (Ketua)", "Ibu Maria Liana (Sekretaris)", "Bpk. David Tjandra (Bendahara)", "Pdt. Filemon Suryanto"]} 
+          members={["Pnts. Benny Soenarjo (Ketua)", "Pnts. Ginawan Chondro (Wakil Ketua)", "Pnt. Arif Subagyo (Sekretaris)", "Pnt. Widianto Tjandradipura (Bendahara)"]} 
         />
         
         <BoardSection 
-          title="Anggota Yayasan" 
-          members={["Bpk. Anton Winata", "Ibu Esther Purnomo", "Bpk. Timotius Hadi", "Pdt. Barnabas Siregar", "Ibu Lidya Kusuma", "Bpk. Setio Budi"]} 
+          title="Anggota" 
+          members={["Pnts. Agus Tjandra", "Ev. Doroti Tunggal Widjaja, M.Th.", "Bp. Eddy Samuel Affendie", "Pnts.Edi Sukamto Josana", "Bp. Herjanto Gunawan", "Pnts. Joseph Koshan", "Pnt. Suwito Kwee"]} 
         />
       </PageContainer>
     </>
