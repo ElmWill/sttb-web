@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/router"
@@ -9,12 +9,15 @@ import { useAuth } from "@/contexts/AuthContext"
 import { usePermission } from "@/contexts/PermissionContext"
 
 export const Navbar = () => {
+  const headerRef = useRef<HTMLElement | null>(null)
+  const mobileMenuScrollRef = useRef<HTMLDivElement | null>(null)
   const router = useRouter()
   const { user, isAuthenticated, logout } = useAuth()
   const { isAdmin } = usePermission()
   const [activeTab, setActiveTab] = useState<string>("")
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+  const [mobileMenuTop, setMobileMenuTop] = useState(80)
 
   const handleLogout = () => {
     logout()
@@ -33,6 +36,36 @@ export const Navbar = () => {
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
+
+  useEffect(() => {
+    const updateHeaderHeight = () => {
+      if (!headerRef.current) return
+      setMobileMenuTop(Math.ceil(headerRef.current.getBoundingClientRect().height))
+    }
+
+    updateHeaderHeight()
+    window.addEventListener("resize", updateHeaderHeight)
+
+    return () => {
+      window.removeEventListener("resize", updateHeaderHeight)
+    }
+  }, [isScrolled])
+
+  useEffect(() => {
+    if (!isMobileMenuOpen) return
+
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    requestAnimationFrame(() => {
+      if (mobileMenuScrollRef.current) {
+        mobileMenuScrollRef.current.scrollTop = 0
+      }
+    })
+
+    return () => {
+      document.body.style.overflow = previousOverflow
+    }
+  }, [isMobileMenuOpen])
 
   const menuItems = [
     {
@@ -283,9 +316,10 @@ export const Navbar = () => {
 
   return (
     <header 
-      className={`sticky top-0 z-50 w-full transition-all duration-300 ${
+      ref={headerRef}
+      className={`sticky top-0 z-[70] w-full transition-all duration-300 ${
         isScrolled 
-          ? "bg-background/95 backdrop-blur-md border-b border-border shadow-sm py-2" 
+          ? "bg-background/95 lg:backdrop-blur-md border-b border-border shadow-sm py-2" 
           : "bg-background border-b border-transparent py-4"
       }`}
       onMouseLeave={() => setActiveTab("")} // Close all menus when mouse leaves header
@@ -377,7 +411,11 @@ export const Navbar = () => {
 
         {/* MOBILE MENU TOGGLE */}
         <button 
-          className="lg:hidden p-2 -mr-2 text-foreground hover:bg-accent rounded-md z-50 transition-colors"
+          className={`lg:hidden p-2 -mr-2 rounded-md z-[80] transition-colors ${
+            isScrolled
+              ? "text-foreground bg-background/90 border border-border shadow-sm"
+              : "text-foreground hover:bg-accent"
+          }`}
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           aria-label="Toggle menu"
         >
@@ -388,56 +426,59 @@ export const Navbar = () => {
 
       {/* MOBILE FULLSCREEN MENU */}
       <div 
-        className={`fixed inset-0 bg-background/98 backdrop-blur-xl z-40 lg:hidden transition-all duration-300 flex flex-col pt-24 pb-8 px-6 ${
+        style={{ top: `${mobileMenuTop}px` }}
+        className={`fixed left-0 right-0 bottom-0 bg-background/98 backdrop-blur-xl z-[60] lg:hidden transition-all duration-300 pt-6 pb-8 px-6 ${
           isMobileMenuOpen ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full pointer-events-none"
         }`}
       >
-        <div className="flex-1 overflow-y-auto w-full max-w-md mx-auto space-y-8">
-          {menuItems.map((item) => (
-            <div key={item.value} className="space-y-4">
-              <div className="flex items-center space-x-3 text-lg font-bold text-primary border-b border-border/50 pb-2">
-                {item.icon}
-                <span>{item.label}</span>
+        <div ref={mobileMenuScrollRef} className="h-full overflow-y-auto">
+          <div className="w-full max-w-md mx-auto space-y-8 pb-8">
+            {menuItems.map((item) => (
+              <div key={item.value} className="space-y-4">
+                <div className="flex items-center space-x-3 text-lg font-bold text-primary border-b border-border/50 pb-2">
+                  {item.icon}
+                  <span>{item.label}</span>
+                </div>
+                <div className="grid gap-1 pl-4">
+                  {item.mobileLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className="block py-2 px-3 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors group"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <div className="font-medium text-sm group-hover:text-primary transition-colors">{link.label}</div>
+                      <div className="text-xs text-muted-foreground">{link.desc}</div>
+                    </Link>
+                  ))}
+                </div>
               </div>
-              <div className="grid gap-1 pl-4">
-                {item.mobileLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className="block py-2 px-3 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors group"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    <div className="font-medium text-sm group-hover:text-primary transition-colors">{link.label}</div>
-                    <div className="text-xs text-muted-foreground">{link.desc}</div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
 
-        <div className="w-full max-w-md mx-auto pt-6 border-t border-border mt-auto grid gap-3">
-          {isAuthenticated ? (
-            <>
-              {isAdmin && (
-                <Button variant="outline" className="w-full justify-center text-base h-12" asChild onClick={() => setIsMobileMenuOpen(false)}>
-                  <Link href="/dashboard"><LayoutDashboard className="h-4 w-4 mr-2" />Dashboard</Link>
-                </Button>
+            <div className="w-full max-w-md mx-auto pt-6 border-t border-border grid gap-3">
+              {isAuthenticated ? (
+                <>
+                  {isAdmin && (
+                    <Button variant="outline" className="w-full justify-center text-base h-12" asChild onClick={() => setIsMobileMenuOpen(false)}>
+                      <Link href="/dashboard"><LayoutDashboard className="h-4 w-4 mr-2" />Dashboard</Link>
+                    </Button>
+                  )}
+                  <Button variant="destructive" className="w-full justify-center text-base h-12" onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }}>
+                    <LogOut className="h-4 w-4 mr-2" />Keluar ({user?.name})
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button variant="outline" className="w-full justify-center text-base h-12" asChild onClick={() => setIsMobileMenuOpen(false)}>
+                    <Link href="/auth/login"><LogIn className="h-4 w-4 mr-2" />Login</Link>
+                  </Button>
+                  <Button className="w-full justify-center text-base h-12" asChild onClick={() => setIsMobileMenuOpen(false)}>
+                    <Link href="/admisi/prosedur">Daftar Sekarang</Link>
+                  </Button>
+                </>
               )}
-              <Button variant="destructive" className="w-full justify-center text-base h-12" onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }}>
-                <LogOut className="h-4 w-4 mr-2" />Keluar ({user?.name})
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button variant="outline" className="w-full justify-center text-base h-12" asChild onClick={() => setIsMobileMenuOpen(false)}>
-                <Link href="/auth/login"><LogIn className="h-4 w-4 mr-2" />Login</Link>
-              </Button>
-              <Button className="w-full justify-center text-base h-12" asChild onClick={() => setIsMobileMenuOpen(false)}>
-                <Link href="/admisi/prosedur">Daftar Sekarang</Link>
-              </Button>
-            </>
-          )}
+            </div>
+          </div>
         </div>
       </div>
     </header>

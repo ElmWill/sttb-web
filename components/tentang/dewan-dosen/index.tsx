@@ -1,7 +1,9 @@
-import React from "react"
+import React, { useRef } from "react"
 import { PageContainer } from "@/components/layouts/PageContainer"
 import { SectionHeader } from "@/components/shared/SectionHeader"
 import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 
 type LecturerProfile = {
   name: string
@@ -32,26 +34,15 @@ const photoByName: Record<string, string> = {
   "Winarsih": "/images/lecturers/Winarsih.png",
 }
 
-const fallbackPhotos = [
-  "/images/lecturers/Sutrisna Harjanto.png",
-  "/images/lecturers/Tan Giok Lie.png",
-  "/images/lecturers/Wemmy Prayogo.png",
-  "/images/lecturers/Johan Setiawan.png",
-  "/images/lecturers/Joseph Tong.png",
-  "/images/founders/CalebTong.png",
-  "/images/founders/JosephTong.png",
-  "/images/founders/Dorothy.png",
-]
-
-const getLecturerPhoto = (name: string, index: number) => {
-  return photoByName[name] ?? fallbackPhotos[index % fallbackPhotos.length]
+const getLecturerPhoto = (name: string) => {
+  return photoByName[name] ?? null
 }
 
 const toBackgroundImage = (path: string) => `url("${encodeURI(path)}")`
 
-const LecturerCard = ({ lecturer, image }: { lecturer: LecturerProfile, image: string }) => (
+const LecturerCard = ({ lecturer, image }: { lecturer: LecturerProfile, image: string | null }) => (
   <Card className="overflow-hidden border-transparent shadow-md hover:shadow-lg transition-all h-full">
-    <div className="h-[300px] w-full bg-cover bg-center bg-muted" style={{ backgroundImage: toBackgroundImage(image) }} />
+    <div className="h-[300px] w-full bg-cover bg-center bg-muted" style={image ? { backgroundImage: toBackgroundImage(image) } : undefined} />
     <CardContent className="p-5 bg-card z-10 relative space-y-3">
       <div>
         <h3 className="font-bold text-lg leading-tight">{lecturer.name}</h3>
@@ -68,6 +59,18 @@ const LecturerCard = ({ lecturer, image }: { lecturer: LecturerProfile, image: s
 )
 
 export default function DewanDosenFeature() {
+  const jajaranCarouselRef = useRef<HTMLDivElement | null>(null)
+
+  const scrollJajaran = (direction: "prev" | "next") => {
+    if (!jajaranCarouselRef.current) return
+
+    const amount = Math.round(jajaranCarouselRef.current.clientWidth * 0.85)
+    jajaranCarouselRef.current.scrollBy({
+      left: direction === "next" ? amount : -amount,
+      behavior: "smooth",
+    })
+  }
+
   const pimpinan: LecturerProfile[] = [
     {
       name: "Sutrisna Harjanto",
@@ -434,22 +437,35 @@ export default function DewanDosenFeature() {
       <PageContainer>
         <SectionHeader title="Pimpinan Institusi" align="center" description="Ketua dan jajaran wakil ketua STTB." />
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 mb-16">
-          {pimpinan.map((lecturer, index) => (
-            <LecturerCard key={`${lecturer.name}-${lecturer.role}`} lecturer={lecturer} image={getLecturerPhoto(lecturer.name, index)} />
+          {pimpinan.map((lecturer) => (
+            <LecturerCard key={`${lecturer.name}-${lecturer.role}`} lecturer={lecturer} image={getLecturerPhoto(lecturer.name)} />
           ))}
         </div>
 
         <SectionHeader title="Ketua Program Studi" align="center" description="Koordinator akademik pada tiap program studi." />
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 mb-16">
-          {ketuaProgramStudi.map((lecturer, index) => (
-            <LecturerCard key={`${lecturer.name}-${lecturer.role}`} lecturer={lecturer} image={getLecturerPhoto(lecturer.name, index)} />
+          {ketuaProgramStudi.map((lecturer) => (
+            <LecturerCard key={`${lecturer.name}-${lecturer.role}`} lecturer={lecturer} image={getLecturerPhoto(lecturer.name)} />
           ))}
         </div>
 
-        <SectionHeader title="Jajaran Dosen" align="left" description="Dosen tetap dan dosen STTB." />
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-          {jajaranDosen.map((lecturer, index) => (
-            <LecturerCard key={`${lecturer.name}-${lecturer.role}`} lecturer={lecturer} image={getLecturerPhoto(lecturer.name, index)} />
+        <SectionHeader title="Jajaran Dosen" align="left" description="" />
+        <div className="flex justify-end gap-2 mb-4">
+          <Button type="button" variant="outline" size="icon" aria-label="Sebelumnya" onClick={() => scrollJajaran("prev")}>
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <Button type="button" variant="outline" size="icon" aria-label="Berikutnya" onClick={() => scrollJajaran("next")}>
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+        <div
+          ref={jajaranCarouselRef}
+          className="flex gap-6 overflow-x-auto snap-x snap-mandatory pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+        >
+          {jajaranDosen.map((lecturer) => (
+            <div key={`${lecturer.name}-${lecturer.role}`} className="min-w-[280px] md:min-w-[340px] max-w-[360px] shrink-0 snap-start">
+              <LecturerCard lecturer={lecturer} image={getLecturerPhoto(lecturer.name)} />
+            </div>
           ))}
         </div>
       </PageContainer>
