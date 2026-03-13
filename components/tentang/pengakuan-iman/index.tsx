@@ -22,7 +22,7 @@ export default function PengakuanImanFeature() {
           />
           <ImanItem
             title="2. KAMI PERCAYA"
-            desc="bahwwa Allah adalah Esa dan kekal, Mhakudus, dan penuh rahmat. Ia adalah pencipta, penguasa, dan pemelihara alam semesta beserta segala isinya, Tritunggal sebagai Bapa, Anak, dan Roh Kudus. Masing-masing adalah Probadi yang tidak diciptakan, sehakekat, dan setara dalam kuasa dan kemuliaan. Ia berdaulat baik dalam keselamatan maupun dalam penghakiman umat manusia."
+            desc="bahwa Allah adalah Esa dan kekal, Mhakudus, dan penuh rahmat. Ia adalah pencipta, penguasa, dan pemelihara alam semesta beserta segala isinya, Tritunggal sebagai Bapa, Anak, dan Roh Kudus. Masing-masing adalah Probadi yang tidak diciptakan, sehakekat, dan setara dalam kuasa dan kemuliaan. Ia berdaulat baik dalam keselamatan maupun dalam penghakiman umat manusia."
           />
           <ImanItem
             title="3. KAMI PERCAYA"
