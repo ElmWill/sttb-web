@@ -1,5 +1,4 @@
 import React from "react"
-import { PageHero } from "@/components/shared/PageHero"
 import { PageContainer } from "@/components/layouts/PageContainer"
 import { SectionHeader } from "@/components/shared/SectionHeader"
 import { Card, CardContent } from "@/components/ui/card"
@@ -34,7 +33,6 @@ export default function PersyaratanFeature() {
 
   return (
     <>
-      <PageHero title="Info Persyaratan" description="Dokumen dan kriteria pendaftaran STTB." />
       <PageContainer className="max-w-4xl">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           <div>

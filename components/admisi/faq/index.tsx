@@ -1,5 +1,4 @@
 import React from "react"
-import { PageHero } from "@/components/shared/PageHero"
 import { PageContainer } from "@/components/layouts/PageContainer"
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion"
 import { Card, CardContent } from "@/components/ui/card"
@@ -15,7 +14,6 @@ const faqs = [
 export default function FaqFeature() {
   return (
     <>
-      <PageHero title="FAQ" description="Pertanyaan yang Sering Diajukan Seputar Pendaftaran." />
       <PageContainer className="max-w-3xl">
         <Card>
           <CardContent className="p-8">

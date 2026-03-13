@@ -1,5 +1,4 @@
 import React from "react";
-import { PageHero } from "@/components/shared/PageHero";
 import { PageContainer } from "@/components/layouts/PageContainer";
 import {
   Card,
@@ -91,10 +90,6 @@ export default function ProgramListFeature() {
 
   return (
     <>
-      <PageHero
-        title="Program Akademik"
-        description="Pilihan program studi S1 dan S2 di Sekolah Tinggi Teologi Bandung."
-      />
       <PageContainer>
         <div className="space-y-12">
           {sortedLevels.map((level) => (

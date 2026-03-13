@@ -2,7 +2,6 @@ import React from "react"
 import Head from "next/head"
 import { AppSettings } from "@/functions/AppSettings"
 import { MainLayout } from "@/components/layouts/MainLayout"
-import { PageHero } from "@/components/shared/PageHero"
 import { PageContainer } from "@/components/layouts/PageContainer"
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import Link from "next/link"
@@ -19,7 +18,6 @@ export default function KehidupanKampusIndex() {
       <Head>
         <title>Kehidupan Kampus | {AppSettings.appName}</title>
       </Head>
-      <PageHero title="Kehidupan Kampus" description="Menumbuhkan karakter, spiritualitas, dan kebersamaan di STTB." />
       <PageContainer>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {links.map(link => (

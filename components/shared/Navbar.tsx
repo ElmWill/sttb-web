@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react"
+import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { Button } from "@/components/ui/button"
@@ -293,8 +294,8 @@ export const Navbar = () => {
         
         {/* LOGO */}
         <Link href="/" className="flex items-center space-x-3 z-50 transition-transform hover:scale-105">
-          <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center font-bold text-primary-foreground shadow-md">
-            ST
+          <div className="w-11 h-11 rounded-lg bg-white border border-border/70 shadow-sm flex items-center justify-center p-1.5">
+            <Image src="/images/logo/sttb-logo.svg" alt="Logo STTB" width={34} height={34} priority />
           </div>
           <div className="flex flex-col">
             <span className="font-bold text-lg leading-none tracking-tight">STT Bandung</span>

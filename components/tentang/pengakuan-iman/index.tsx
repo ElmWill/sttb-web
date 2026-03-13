@@ -1,5 +1,4 @@
 import React from "react"
-import { PageHero } from "@/components/shared/PageHero"
 import { PageContainer } from "@/components/layouts/PageContainer"
 import { Card, CardContent } from "@/components/ui/card"
 
@@ -15,7 +14,6 @@ const ImanItem = ({ title, desc }: { title: string, desc: string }) => (
 export default function PengakuanImanFeature() {
   return (
     <>
-      <PageHero title="Pengakuan Iman" description="Dasar keyakinan teologis yang kami pegang teguh." />
       <PageContainer>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <ImanItem 

@@ -22,7 +22,7 @@ export default function Kegiatan() {
       image: (event.featuredImageId || (event as any).FeaturedImageId)
         ? `/api/media-file/${event.featuredImageId || (event as any).FeaturedImageId}`
         : "/placeholders/kegiatan-1.jpg",
-    };
+    };  
   });
 
   return (

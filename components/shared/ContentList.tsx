@@ -1,5 +1,4 @@
 import React from "react"
-import { PageHero } from "@/components/shared/PageHero"
 import { PageContainer } from "@/components/layouts/PageContainer"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -23,7 +22,6 @@ interface ContentListProps {
 export const ContentList = ({ title, description, basePath, items }: ContentListProps) => {
   return (
     <>
-      <PageHero title={title} description={description} />
       <PageContainer>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {items.map(item => (

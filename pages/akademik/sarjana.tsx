@@ -4,7 +4,6 @@ import Link from "next/link";
 import { AppSettings } from "@/functions/AppSettings";
 import { MainLayout } from "@/components/layouts/MainLayout";
 import { PageContainer } from "@/components/layouts/PageContainer";
-import { PageHero } from "@/components/shared/PageHero";
 import { ProgramCard } from "@/components/akademik/program-list";
 import { useStudyProgramList } from "@/components/akademik/hooks/useStudyProgramData";
 import { Button } from "@/components/ui/button";
@@ -30,10 +29,6 @@ function SarjanaList() {
 
   return (
     <>
-      <PageHero
-        title="Program Sarjana (S1)"
-        description="Temukan program studi Sarjana di Sekolah Tinggi Teologi Bandung."
-      />
       <PageContainer>
         {programs.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 text-center gap-4">

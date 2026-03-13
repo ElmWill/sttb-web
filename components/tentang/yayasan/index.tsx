@@ -1,5 +1,4 @@
 import React from "react"
-import { PageHero } from "@/components/shared/PageHero"
 import { PageContainer } from "@/components/layouts/PageContainer"
 import { SectionHeader } from "@/components/shared/SectionHeader"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -25,7 +24,6 @@ const BoardSection = ({ title, members }: { title: string, members: string[] }) 
 export default function YayasanFeature() {
   return (
     <>
-      <PageHero title="Yayasan STTB" description="Badan penyelenggara Sekolah Tinggi Teologi Bandung." />
       <PageContainer className="max-w-4xl">
         <div className="mb-12 text-lg text-muted-foreground leading-relaxed text-center">
           <p>

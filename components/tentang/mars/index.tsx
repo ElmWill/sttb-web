@@ -1,16 +1,11 @@
 import React from "react";
-import { PageHero } from "@/components/shared/PageHero";
+
 import { PageContainer } from "@/components/layouts/PageContainer";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default function MarsFeature() {
   return (
     <>
-      <PageHero
-        title="Mars STTB"
-        description=""
-      />
-
       <PageContainer className="max-w-4xl space-y-10">
         {/* Lyrics Image */}
         <Card>
@@ -21,7 +16,7 @@ export default function MarsFeature() {
 
             <div className="flex justify-center">
               <img
-                src="/images/mars-sttb-lyrics.jpg"
+                src="/images/misc/notMusic.png"
                 alt="Lirik Mars STTB"
                 className="rounded-lg shadow-md max-w-full h-auto"
               />

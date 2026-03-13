@@ -1,5 +1,4 @@
 import React from "react"
-import { PageHero } from "@/components/shared/PageHero"
 import { PageContainer } from "@/components/layouts/PageContainer"
 import { Card, CardContent } from "@/components/ui/card"
 import { HeartPulse, ShieldAlert, Sparkles, Users } from "lucide-react"
@@ -7,7 +6,6 @@ import { HeartPulse, ShieldAlert, Sparkles, Users } from "lucide-react"
 export default function PembinaanFeature() {
   return (
     <>
-      <PageHero title="Pembinaan Rohani" description="Keseimbangan antara keunggulan akademis dan integritas karakter." />
       <PageContainer className="max-w-4xl">
         <div className="mb-12 text-center text-lg text-muted-foreground leading-relaxed">
           <p>

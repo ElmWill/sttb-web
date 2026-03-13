@@ -11,7 +11,7 @@ interface PageHeroProps {
 export const PageHero = ({
   title,
   description,
-  backgroundImage = "/images/campus/default-hero.jpg",
+  backgroundImage = "/images/misc/Image (background hero STTB).png",
   className,
 }: PageHeroProps) => {
   return (

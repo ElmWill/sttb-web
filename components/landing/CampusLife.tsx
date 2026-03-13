@@ -39,10 +39,10 @@ export const CampusLife = () => {
         <div className="grid grid-cols-2 gap-4 h-[400px]">
           {/* Image placeholders */}
           <div className="bg-secondary/20 rounded-xl rounded-tr-[4rem] flex-1 w-full h-full relative overflow-hidden">
-            <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/placeholders/campus-1.jpg')" }} />
+            <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/images/campus/PerpustakaanUtama.png')" }} />
           </div>
           <div className="bg-primary/20 rounded-xl rounded-bl-[4rem] flex-1 w-full h-full relative overflow-hidden mt-8">
-            <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/placeholders/campus-2.jpg')" }} />
+            <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/images/campus/Ruang kelas.png')" }} />
           </div>
         </div>
       </div>

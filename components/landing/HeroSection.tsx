@@ -8,7 +8,7 @@ export const HeroSection = () => {
       {/* Background Image Placeholder */}
       <div 
         className="absolute inset-0 z-0 opacity-40 bg-cover bg-center"
-        style={{ backgroundImage: "url('/images/campus/hero-bg.jpg')" }}
+        style={{ backgroundImage: "url('/images/misc/Image (background hero STTB).png')" }}
       />
       <div className="absolute inset-0 bg-gradient-to-r from-secondary/90 to-secondary/40 z-10" />
       

@@ -1,5 +1,4 @@
 import React from "react"
-import { PageHero } from "@/components/shared/PageHero"
 import { PageContainer } from "@/components/layouts/PageContainer"
 import { SectionHeader } from "@/components/shared/SectionHeader"
 import { Card, CardContent } from "@/components/ui/card"
@@ -25,7 +24,6 @@ export default function SenatFeature() {
 
   return (
     <>
-      <PageHero title="Senat Mahasiswa" description="Wadah organisasi untuk melatih kepemimpinan hamba." />
       <PageContainer className="max-w-5xl">
         <div className="mb-12 text-center text-lg text-muted-foreground leading-relaxed">
           <p>

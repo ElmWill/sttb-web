@@ -1,5 +1,5 @@
 import React from "react";
-import { PageHero } from "@/components/shared/PageHero";
+
 import { PageContainer } from "@/components/layouts/PageContainer";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import { Card, CardContent } from "@/components/ui/card";
@@ -11,10 +11,6 @@ export default function VisiMisiFeature() {
 
   return (
     <>
-      <PageHero
-        title={page?.title || "Visi & Misi"}
-        description={page ? undefined : "Fondasi dan Arah Pelayanan Kami"}
-      />
       <PageContainer>
         {isLoading ? (
           <div className="py-20 text-center text-muted-foreground transition-all animate-pulse">Memuat...</div>

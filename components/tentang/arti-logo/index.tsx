@@ -1,5 +1,4 @@
 import React from "react"
-import { PageHero } from "@/components/shared/PageHero"
 import { PageContainer } from "@/components/layouts/PageContainer"
 import { SectionHeader } from "@/components/shared/SectionHeader"
 import { Card, CardContent } from "@/components/ui/card"
@@ -24,10 +23,6 @@ export default function ArtiLogoFeature() {
 
   return (
     <>
-      <PageHero 
-        title={page?.title || "Arti Logo"} 
-        description={page ? undefined : "Makna filosofis di balik identitas visual STTB."} 
-      />
       <PageContainer>
         {isLoading ? (
           <div className="py-20 text-center text-muted-foreground transition-all animate-pulse">Memuat...</div>
@@ -37,7 +32,7 @@ export default function ArtiLogoFeature() {
           <>
             <div className="flex flex-col items-center mb-16">
               <div className="w-48 h-48 md:w-64 md:h-64 bg-muted/50 rounded-full flex items-center justify-center mb-8 p-8 border">
-                <div className="w-full h-full bg-cover bg-center opacity-50" style={{ backgroundImage: "url('/placeholders/logo-main.png')" }} />
+                <div className="w-full h-full bg-cover bg-center opacity-50" style={{ backgroundImage: "url('/images/logo/Image (Logo STTB).png')" }} />
               </div>
               <SectionHeader 
                 title="Identitas Visual" 
@@ -50,22 +45,22 @@ export default function ArtiLogoFeature() {
               <LogoMeaningCard 
                 title="Alkitab Terbuka" 
                 description="Melambangkan otoritas tertinggi Firman Tuhan yang menjadi dasar bagi seluruh pengajaran dan kehidupan di STTB."
-                image="/placeholders/logo-part-1.png"
+                image="/images/logo/Image (Alkitab).png"
               />
               <LogoMeaningCard 
                 title="Salib" 
                 description="Melambangkan pengorbanan Kristus sebagai pusat dari pesan Injil yang harus diberitakan oleh setiap lulusan."
-                image="/placeholders/logo-part-2.png"
+                image="/images/logo/Image (Api).png"
               />
               <LogoMeaningCard 
                 title="Nyala Api" 
                 description="Melambangkan penyertaan Roh Kudus yang senantiasa membakar semangat pelayanan dan mengilhami kebenaran."
-                image="/placeholders/logo-part-3.png"
+                image="/images/logo/Image (Salib & Mahkota).png"
               />
               <LogoMeaningCard 
                 title="Warna Biru dan Merah" 
                 description="Warna biru melambangkan kedamaian dan kedalaman teologi, sementara merah melambangkan keberanian dan darah penebusan Kristus."
-                image="/placeholders/logo-part-4.png"
+                image="/images/logo/Image (Tongkat Gembala).png"
               />
             </div>
           </>

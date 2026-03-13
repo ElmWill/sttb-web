@@ -1,5 +1,4 @@
 import React from "react";
-import { PageHero } from "@/components/shared/PageHero";
 import { PageContainer } from "@/components/layouts/PageContainer";
 import { Card, CardContent } from "@/components/ui/card";
 import { usePageDetail } from "@/hooks/usePageData";
@@ -33,7 +32,6 @@ export default function SejarahFeature() {
 
   return (
     <>
-      <PageHero title={page?.title || "Sejarah STTB"} />
       <PageContainer className="max-w-4xl">
         {isLoading ? (
           <div className="py-20 text-center text-muted-foreground transition-all animate-pulse">Memuat Sejarah...</div>

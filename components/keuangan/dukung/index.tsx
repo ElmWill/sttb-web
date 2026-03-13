@@ -1,5 +1,4 @@
 import React from "react"
-import { PageHero } from "@/components/shared/PageHero"
 import { PageContainer } from "@/components/layouts/PageContainer"
 import { SectionHeader } from "@/components/shared/SectionHeader"
 import { Card, CardContent } from "@/components/ui/card"
@@ -9,7 +8,6 @@ import { Copy, HeartHandshake } from "lucide-react"
 export default function DukungFeature() {
   return (
     <>
-      <PageHero title="Dukung STTB" description="Berpartisipasi dalam mencetak generasi hamba Tuhan masa depan." />
       <PageContainer className="max-w-4xl">
         <div className="text-center mb-12">
           <HeartHandshake className="w-16 h-16 text-primary mx-auto mb-6" />

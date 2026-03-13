@@ -1,5 +1,4 @@
 import React from "react"
-import { PageHero } from "@/components/shared/PageHero"
 import { PageContainer } from "@/components/layouts/PageContainer"
 import { SectionHeader } from "@/components/shared/SectionHeader"
 import {
@@ -52,7 +51,6 @@ export default function BiayaStudiFeature() {
 
   return (
     <>
-      <PageHero title="Biaya Studi" description="Informasi investasi pendidikan untuk berbagai jenjang di STTB." />
       <PageContainer className="max-w-4xl">
         <SectionHeader title="Rincian Komponen Biaya" description="Berikut adalah estimasi rincian biaya resmi untuk tahun akademik berjalan." align="center" />
         <PriceTable title="Program Sarjana (S1)" items={biayaS1} />

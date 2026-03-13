@@ -1,5 +1,4 @@
 import React from "react"
-import { PageHero } from "@/components/shared/PageHero"
 import { PageContainer } from "@/components/layouts/PageContainer"
 import { SectionHeader } from "@/components/shared/SectionHeader"
 import { AdmissionCalendar } from "./AdmissionCalendar"
@@ -15,7 +14,6 @@ const jadwalData = [
 export default function JadwalAdmisiFeature() {
   return (
     <>
-      <PageHero title="Jadwal Admisi" description="Tanggal penting penerimaan mahasiswa baru STTB." />
       <PageContainer className="max-w-4xl">
         <SectionHeader title="Jadwal Gelombang Pendaftaran" description="Penerimaan mahasiswa baru dibuka dalam 3 gelombang." align="center" />
         

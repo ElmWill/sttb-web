@@ -1,5 +1,4 @@
 import React from "react"
-import { PageHero } from "@/components/shared/PageHero"
 import { PageContainer } from "@/components/layouts/PageContainer"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -44,7 +43,6 @@ export default function BeasiswaFeature() {
 
   return (
     <>
-      <PageHero title="Program Beasiswa" description="Dukungan finansial bagi mereka yang sungguh-sungguh terpanggil." />
       <PageContainer>
         <div className="max-w-3xl mx-auto text-center mb-12">
           <p className="text-lg text-muted-foreground">
