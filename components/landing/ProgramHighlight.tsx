@@ -18,9 +18,9 @@ const programs = [
     slug: "sarjana-pendidikan-kristen"
   },
   {
-    title: "Magister Teologi",
-    description: "Program lanjutan untuk memperdalam studi teologi, hermeneutik, dan pelayanan pastoral.",
-    slug: "magister-teologi-pelayanan-pastoral"
+    title: "Magister Pendidikan Agama Kristen",
+    description: "Program magister untuk pengembangan kepemimpinan dan pendidikan Kristen",
+    slug: "magister-pendidikan-agama-kristen"
   }
 ]
 
