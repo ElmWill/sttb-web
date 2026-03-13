@@ -1,26 +1,13 @@
 import React, { useState, useMemo } from "react"
 import Head from "next/head"
 import Link from "next/link"
+import useSWR from "swr"
 import { AppSettings } from "@/functions/AppSettings"
 import { MainLayout } from "@/components/layouts/MainLayout"
-import { useAcademicCalendarList } from "@/components/kalender-akademik/hooks/useAcademicCalendarData"
-import { AcademicCalendarListItem } from "@/types/Models"
-import { ChevronLeft, ChevronRight, CalendarDays } from "lucide-react"
-
-// ── colour coding by event type ──────────────────────────────────────────────
-const EVENT_TYPE_COLORS: Record<string, { dot: string; badge: string; text: string }> = {
-  Perkuliahan: { dot: "bg-blue-500",   badge: "bg-blue-100 text-blue-800 border-blue-200",   text: "text-blue-700" },
-  UTS:         { dot: "bg-red-500",    badge: "bg-red-100 text-red-800 border-red-200",       text: "text-red-700" },
-  UAS:         { dot: "bg-orange-500", badge: "bg-orange-100 text-orange-800 border-orange-200", text: "text-orange-700" },
-  Libur:       { dot: "bg-green-500",  badge: "bg-green-100 text-green-800 border-green-200", text: "text-green-700" },
-  Wisuda:      { dot: "bg-purple-500", badge: "bg-purple-100 text-purple-800 border-purple-200", text: "text-purple-700" },
-  Pendaftaran: { dot: "bg-yellow-500", badge: "bg-yellow-100 text-yellow-800 border-yellow-200", text: "text-yellow-700" },
-  Lainnya:     { dot: "bg-gray-400",   badge: "bg-gray-100 text-gray-700 border-gray-200",    text: "text-gray-600" },
-}
-
-function getColors(eventType?: string) {
-  return EVENT_TYPE_COLORS[eventType ?? ""] ?? EVENT_TYPE_COLORS.Lainnya
-}
+import { eventsApi } from "@/functions/api/eventsApi"
+import { EventListItem, PagedResult } from "@/types/Models"
+import { useSwrFetcherWithAccessToken } from "@/functions/useSwrFetcherWithAccessToken"
+import { ChevronLeft, ChevronRight, CalendarDays, MapPin } from "lucide-react"
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 const MONTH_NAMES_ID = [
@@ -29,13 +16,8 @@ const MONTH_NAMES_ID = [
 ]
 const DAY_NAMES_ID = ["Min","Sen","Sel","Rab","Kam","Jum","Sab"]
 
-function toYMD(iso: string) {
-  // returns "YYYY-MM-DD"
-  return iso.slice(0, 10)
-}
-
 /** Returns all YYYY-MM-DD strings an event spans (inclusive). */
-function spanDates(item: AcademicCalendarListItem): string[] {
+function spanDates(item: EventListItem): string[] {
   const start = new Date(item.startDate || (item as any).StartDate)
   const rawEnd = item.endDate || (item as any).EndDate
   const end = rawEnd ? new Date(rawEnd) : start
@@ -60,7 +42,7 @@ function firstDayOfMonth(year: number, month: number) {
 interface CalendarGridProps {
   year: number
   month: number
-  eventsByDate: Map<string, AcademicCalendarListItem[]>
+  eventsByDate: Map<string, EventListItem[]>
   selectedDay: number | null
   onSelectDay: (day: number) => void
 }
@@ -74,7 +56,6 @@ function CalendarGrid({ year, month, eventsByDate, selectedDay, onSelectDay }: C
   const cells: (number | null)[] = []
   for (let i = 0; i < firstDay; i++) cells.push(null)
   for (let d = 1; d <= numDays; d++) cells.push(d)
-  // Pad to full weeks
   while (cells.length % 7 !== 0) cells.push(null)
 
   return (
@@ -94,9 +75,7 @@ function CalendarGrid({ year, month, eventsByDate, selectedDay, onSelectDay }: C
           const events = eventsByDate.get(ymd) ?? []
           const isToday = ymd === todayYMD
           const isSelected = day === selectedDay
-
-          // Collect up to 3 unique event type dots
-          const typeDots = [...new Set(events.map((e) => e.eventType || (e as any).EventType || "Lainnya"))].slice(0, 3)
+          const hasEvents = events.length > 0
 
           return (
             <button
@@ -111,14 +90,11 @@ function CalendarGrid({ year, month, eventsByDate, selectedDay, onSelectDay }: C
               <span className={["text-sm font-medium leading-6", isSelected ? "text-primary-foreground" : ""].join(" ")}>
                 {day}
               </span>
-              {typeDots.length > 0 && (
+              {hasEvents && (
                 <div className="flex gap-0.5 mt-0.5">
-                  {typeDots.map((type, i) => (
-                    <span
-                      key={i}
-                      className={["w-1.5 h-1.5 rounded-full", getColors(type).dot, isSelected ? "opacity-80" : ""].join(" ")}
-                    />
-                  ))}
+                  <span
+                    className={["w-1.5 h-1.5 rounded-full bg-primary", isSelected ? "opacity-60" : ""].join(" ")}
+                  />
                 </div>
               )}
             </button>
@@ -130,17 +106,14 @@ function CalendarGrid({ year, month, eventsByDate, selectedDay, onSelectDay }: C
 }
 
 // ── Event card ────────────────────────────────────────────────────────────────
-function EventCard({ item }: { item: AcademicCalendarListItem }) {
+function EventCard({ item }: { item: EventListItem }) {
   const title = item.title || (item as any).Title || ""
   const slug = item.slug || (item as any).Slug || ""
   const startDate = item.startDate || (item as any).StartDate || ""
   const endDate = item.endDate || (item as any).EndDate
-  const eventType = item.eventType || (item as any).EventType || "Lainnya"
-  const academicYear = item.academicYear || (item as any).AcademicYear
-  const semester = item.semester || (item as any).Semester
+  const location = item.location || (item as any).Location
   const description = (item as any).description || (item as any).Description
-
-  const colors = getColors(eventType)
+  const featuredImageId = item.featuredImageId || (item as any).FeaturedImageId || null
 
   const formatDate = (iso: string) =>
     new Date(iso).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" })
@@ -150,49 +123,59 @@ function EventCard({ item }: { item: AcademicCalendarListItem }) {
     : formatDate(startDate)
 
   return (
-    <div className={["rounded-lg border p-3 hover:shadow-sm transition-shadow", colors.badge].join(" ")}>
-      <div className="flex items-start justify-between gap-2">
-        <div className="min-w-0 flex-1">
-          <span className={["inline-block text-xs font-semibold px-1.5 py-0.5 rounded border mb-1", colors.badge].join(" ")}>
-            {eventType}
-          </span>
-          {slug ? (
-            <Link href={`/kalender-akademik/${slug}`} className="block font-semibold text-sm leading-snug hover:underline line-clamp-2">
-              {title}
-            </Link>
-          ) : (
-            <p className="font-semibold text-sm leading-snug line-clamp-2">{title}</p>
-          )}
-          <div className="flex items-center gap-1 mt-1 text-xs text-muted-foreground">
-            <CalendarDays className="w-3 h-3 shrink-0" />
-            <span>{dateStr}</span>
+    <div className="rounded-lg border overflow-hidden hover:shadow-sm transition-shadow bg-primary/5 border-primary/20">
+      {featuredImageId && (
+        <div
+          className="w-full h-36 bg-cover bg-center bg-muted"
+          style={{ backgroundImage: `url(/api/media-file/${featuredImageId})` }}
+        />
+      )}
+      <div className="p-3">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0 flex-1">
+            {slug ? (
+              <Link href={`/kalender-akademik/${slug}`} className="block font-semibold text-sm leading-snug hover:underline line-clamp-2">
+                {title}
+              </Link>
+            ) : (
+              <p className="font-semibold text-sm leading-snug line-clamp-2">{title}</p>
+            )}
+            <div className="flex items-center gap-1 mt-1 text-xs text-muted-foreground">
+              <CalendarDays className="w-3 h-3 shrink-0" />
+              <span>{dateStr}</span>
+            </div>
+            {location && (
+              <div className="flex items-center gap-1 mt-0.5 text-xs text-muted-foreground">
+                <MapPin className="w-3 h-3 shrink-0" />
+                <span className="line-clamp-1">{location}</span>
+              </div>
+            )}
+            {description && (
+              <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{description}</p>
+            )}
           </div>
-          {(academicYear || semester) && (
-            <p className="text-xs text-muted-foreground mt-0.5">
-              {[academicYear, semester].filter(Boolean).join(" · ")}
-            </p>
-          )}
-          {description && (
-            <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{description}</p>
-          )}
         </div>
       </div>
     </div>
   )
 }
 
-// ── Legend ────────────────────────────────────────────────────────────────────
-function Legend() {
-  return (
-    <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
-      {Object.entries(EVENT_TYPE_COLORS).map(([type, c]) => (
-        <span key={type} className="flex items-center gap-1">
-          <span className={["w-2 h-2 rounded-full shrink-0", c.dot].join(" ")} />
-          {type}
-        </span>
-      ))}
-    </div>
+// ── hook: fetch published events for a given month ────────────────────────────
+function usePublishedEvents(year: number, month: number) {
+  const fetcher = useSwrFetcherWithAccessToken()
+
+  // ISO date strings for the first and last day of the given month
+  const startDateFrom = `${year}-${String(month + 1).padStart(2, "0")}-01`
+  const lastDay = new Date(year, month + 1, 0).getDate()
+  const startDateTo = `${year}-${String(month + 1).padStart(2, "0")}-${String(lastDay).padStart(2, "0")}`
+
+  const { data, error, isLoading } = useSWR<PagedResult<EventListItem>>(
+    eventsApi.keys.list(1, undefined, "published", undefined, startDateFrom, startDateTo),
+    fetcher,
   )
+  const events: EventListItem[] =
+    data?.events || (data as any)?.Events || data?.items || (data as any)?.Items || []
+  return { events, isLoading, error }
 }
 
 // ── Main page ─────────────────────────────────────────────────────────────────
@@ -202,34 +185,33 @@ export default function KalenderAkademik() {
   const [month, setMonth] = useState(now.getMonth())
   const [selectedDay, setSelectedDay] = useState<number | null>(now.getDate())
 
-  // Fetch a large page to get all entries client-side
-  const { academicCalendars, isLoading, error } = useAcademicCalendarList(1)
+  const { events, isLoading, error } = usePublishedEvents(year, month)
 
   // Build date → events map spanning multi-day events
   const eventsByDate = useMemo(() => {
-    const map = new Map<string, AcademicCalendarListItem[]>()
-    for (const item of academicCalendars) {
+    const map = new Map<string, EventListItem[]>()
+    for (const item of events) {
       for (const ymd of spanDates(item)) {
         if (!map.has(ymd)) map.set(ymd, [])
         map.get(ymd)!.push(item)
       }
     }
     return map
-  }, [academicCalendars])
+  }, [events])
 
-  // Events visible in the right panel: all events that overlap the selected day or fall in the current month
+  // Events visible in the right panel
   const panelEvents = useMemo(() => {
     if (selectedDay !== null) {
       const ymd = `${year}-${String(month + 1).padStart(2, "0")}-${String(selectedDay).padStart(2, "0")}`
       return eventsByDate.get(ymd) ?? []
     }
-    // fallback: all events in current month
+    // fallback: all events in current month (deduplicated)
     const prefix = `${year}-${String(month + 1).padStart(2, "0")}`
-    const result = new Map<number, AcademicCalendarListItem>()
+    const result = new Map<number, EventListItem>()
     for (const [ymd, items] of eventsByDate.entries()) {
       if (ymd.startsWith(prefix)) {
         for (const item of items) {
-          const id = item.academicCalendarId || (item as any).AcademicCalendarId
+          const id = item.eventId || (item as any).EventId
           result.set(id, item)
         }
       }
@@ -315,8 +297,6 @@ export default function KalenderAkademik() {
                   selectedDay={selectedDay}
                   onSelectDay={setSelectedDay}
                 />
-
-                <Legend />
               </div>
 
               {/* ── Right: Event list ── */}
@@ -342,7 +322,7 @@ export default function KalenderAkademik() {
                 ) : (
                   <div className="space-y-3 max-h-[600px] overflow-y-auto pr-1">
                     {panelEvents.map((item) => {
-                      const id = item.academicCalendarId || (item as any).AcademicCalendarId
+                      const id = item.eventId || (item as any).EventId
                       return <EventCard key={id} item={item} />
                     })}
                   </div>

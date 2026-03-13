@@ -51,7 +51,14 @@ export const LatestNews = () => {
           return (
           <Link href={`/berita/${slug}`} key={news.postId || slug} className="group block">
             <Card className="h-full overflow-hidden border-transparent shadow-sm hover:shadow-md transition-all group-hover:border-primary/20">
-              <div className="h-48 bg-muted w-full relative overflow-hidden">
+              <div
+                className="h-48 bg-muted w-full relative overflow-hidden bg-cover bg-center"
+                style={{
+                  backgroundImage: (news.featuredImageId || (news as any).FeaturedImageId)
+                    ? `url(/api/media-file/${news.featuredImageId || (news as any).FeaturedImageId})`
+                    : undefined,
+                }}
+              >
                 <div className="absolute inset-0 bg-secondary/10 group-hover:bg-transparent transition-colors" />
                 {tag && (
                   <div className="absolute top-4 left-4 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full z-10">

@@ -4,7 +4,7 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
-import { Menu, X, ChevronDown, GraduationCap, BookOpen, HeartHandshake, Users, Info, LogIn, LogOut, LayoutDashboard, CalendarDays, CalendarRange } from "lucide-react"
+import { Menu, X, ChevronDown, GraduationCap, BookOpen, HeartHandshake, Users, Info, LogIn, LogOut, LayoutDashboard, CalendarRange } from "lucide-react"
 import { useAuth } from "@/contexts/AuthContext"
 import { usePermission } from "@/contexts/PermissionContext"
 
@@ -266,7 +266,6 @@ export const Navbar = () => {
         { href: "/kehidupan-kampus/fasilitas", label: "Fasilitas", desc: "Sarana prasarana kampus" },
         { href: "/kehidupan-kampus/pembinaan", label: "Pembinaan Spiritual", desc: "Kegiatan rohani mahasiswa" },
         { href: "/kehidupan-kampus/senat", label: "Senat Mahasiswa", desc: "Organisasi kemahasiswaan" },
-        { href: "/kegiatan", label: "Kegiatan Kampus", desc: "Agenda & acara kampus" },
         { href: "/berita", label: "Berita", desc: "Kabar terkini dari STTB" },
       ],
       content: (
@@ -296,13 +295,6 @@ export const Navbar = () => {
               </Link>
             </div>
             <div className="space-y-3">
-              <Link href="/kegiatan" className="block p-2 -mx-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors group">
-                <div className="flex items-center gap-1.5">
-                  <CalendarDays className="h-3.5 w-3.5 text-primary/70 shrink-0" />
-                  <span className="font-medium group-hover:text-primary transition-colors">Kegiatan Kampus</span>
-                </div>
-                <div className="text-xs text-muted-foreground mt-1">Agenda & acara kampus STTB</div>
-              </Link>
               <Link href="/berita" className="block p-2 -mx-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors group">
                 <div className="font-medium group-hover:text-primary transition-colors">Berita</div>
                 <div className="text-xs text-muted-foreground mt-1">Kabar terkini dari STTB</div>

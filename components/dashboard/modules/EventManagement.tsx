@@ -90,7 +90,9 @@ export default function EventManagement() {
     setIsDialogOpen(true);
     setIsFetchingDetail(true);
     try {
-      const res = await fetch(`${BackendApiUrl.getEventById}/${eventId}`);
+      const headers: Record<string, string> = {};
+      if (user?.token) headers["Authorization"] = `Bearer ${user.token}`;
+      const res = await fetch(`${BackendApiUrl.getEventById}/${eventId}`, { headers });
       if (!res.ok) throw new Error("fetch failed");
       const ev = await res.json();
       setForm({
@@ -126,7 +128,9 @@ export default function EventManagement() {
         body: fd,
       });
       if (!res.ok) throw new Error("upload failed");
-      const { mediaId, fileUrl } = await res.json();
+      const data = await res.json();
+      const mediaId = data.mediaId || data.MediaId;
+      const fileUrl = data.fileUrl || data.FileUrl;
       setForm((f) => ({ ...f, featuredImageId: mediaId, featuredImageUrl: fileUrl }));
     } catch {
       alert("Gagal mengunggah gambar.");
@@ -255,7 +259,7 @@ export default function EventManagement() {
                       <div className="flex justify-end gap-1">
                         {slug && (
                           <Button variant="ghost" size="icon" title="Lihat di web" asChild>
-                            <Link href={`/kegiatan/${slug}`} target="_blank">
+                            <Link href={`/kalender-akademik/${slug}`} target="_blank">
                               <Eye className="w-4 h-4" />
                             </Link>
                           </Button>
@@ -396,9 +400,9 @@ export default function EventManagement() {
                 {(form.featuredImageId || form.featuredImageUrl) ? (
                   <div className="relative w-full h-40 rounded-md overflow-hidden border bg-muted group">
                     <img
-                      src={form.featuredImageId
-                        ? `/api/media-file/${form.featuredImageId}`
-                        : resolveImgSrc(form.featuredImageUrl!)}
+                      src={form.featuredImageUrl
+                        ? resolveImgSrc(form.featuredImageUrl)
+                        : `/api/media-file/${form.featuredImageId}`}
                       alt="Featured"
                       className="w-full h-full object-cover"
                     />

@@ -24,7 +24,9 @@ export default function Berita() {
           month: "short",
           year: "numeric"
         }),
-    image: "/placeholders/berita-1.jpg", 
+    image: (post.featuredImageId || (post as any).FeaturedImageId)
+      ? `/api/media-file/${post.featuredImageId || (post as any).FeaturedImageId}`
+      : "/placeholders/berita-1.jpg",
   }));
 
   return (

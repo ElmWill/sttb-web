@@ -2,7 +2,7 @@ import React from "react";
 import { PageContainer } from "@/components/layouts/PageContainer";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { FileText, Users, Calendar, Megaphone, LayoutDashboard, UserPlus, BookOpen, GraduationCap, Image as ImageIcon, CalendarDays, CalendarRange } from "lucide-react";
+import { FileText, Users, Calendar, LayoutDashboard, UserPlus, BookOpen, GraduationCap, Image as ImageIcon, CalendarRange } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProtectedRoute from "../auth/ProtectedRoute";
 import PostManagement from "./modules/PostManagement";
@@ -11,7 +11,9 @@ import StudyProgramManagement from "./modules/StudyProgramManagement";
 import CourseManagement from "./modules/CourseManagement";
 import MediaManagement from "./modules/MediaManagement";
 import EventManagement from "./modules/EventManagement";
-import AcademicCalendarManagement from "./modules/AcademicCalendarManagement";
+import { usePostData } from "./hooks/usePostData";
+import { useEventData } from "./hooks/useEventData";
+import { useMediaData } from "./hooks/useMediaData";
 
 const StatCard = ({
   title,
@@ -38,6 +40,10 @@ const StatCard = ({
 );
 
 export default function DashboardFeature() {
+  const { totalCount: postCount, isLoading: postsLoading } = usePostData(1);
+  const { totalCount: eventCount, isLoading: eventsLoading } = useEventData(1);
+  const { totalCount: mediaCount, isLoading: mediaLoading } = useMediaData(1);
+
   return (
     <ProtectedRoute allowedRoles={["admin", "superadmin"]}>
       <div className="pt-24 pb-12">
@@ -45,7 +51,7 @@ export default function DashboardFeature() {
           <div className="mb-8">
             <SectionHeader
               title="Dashboard Administrator"
-              description="Ringkasan data Content Management System STTB."
+              // description="Ringkasan data Content Management System STTB."
             />
           </div>
 
@@ -75,10 +81,6 @@ export default function DashboardFeature() {
                 <ImageIcon className="w-4 h-4 mr-2" />
                 Media
               </TabsTrigger>
-              <TabsTrigger value="events" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground py-2 px-4">
-                <CalendarDays className="w-4 h-4 mr-2" />
-                Kegiatan
-              </TabsTrigger>
               <TabsTrigger value="academic-calendar" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground py-2 px-4">
                 <CalendarRange className="w-4 h-4 mr-2" />
                 Kalender Akademik
@@ -87,10 +89,10 @@ export default function DashboardFeature() {
 
             <TabsContent value="overview" className="space-y-8 animate-in fade-in-50 duration-500">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <StatCard title="Total Berita" count={124} icon={FileText} />
-                <StatCard title="Pendaftar Baru" count={48} icon={Users} />
-                <StatCard title="Kegiatan Aktif" count={12} icon={Calendar} />
-                <StatCard title="Publikasi Media" count={89} icon={Megaphone} />
+                <StatCard title="Total Berita" count={postsLoading ? "..." : postCount} icon={FileText} />
+                <StatCard title="Pendaftar Baru" count="-" icon={Users} />
+                <StatCard title="Total Kegiatan" count={eventsLoading ? "..." : eventCount} icon={Calendar} />
+                <StatCard title="Publikasi Media" count={mediaLoading ? "..." : mediaCount} icon={ImageIcon} />
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -181,18 +183,10 @@ export default function DashboardFeature() {
               </Card>
             </TabsContent>
 
-            <TabsContent value="events" className="animate-in slide-in-from-left-2 duration-300">
-              <Card>
-                <CardContent className="pt-6">
-                  <EventManagement />
-                </CardContent>
-              </Card>
-            </TabsContent>
-
             <TabsContent value="academic-calendar" className="animate-in slide-in-from-left-2 duration-300">
               <Card>
                 <CardContent className="pt-6">
-                  <AcademicCalendarManagement />
+                  <EventManagement />
                 </CardContent>
               </Card>
             </TabsContent>

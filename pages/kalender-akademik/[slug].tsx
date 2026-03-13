@@ -1,31 +1,35 @@
 import React from "react"
 import Head from "next/head"
 import { useRouter } from "next/router"
+import useSWR from "swr"
 import { AppSettings } from "@/functions/AppSettings"
 import { MainLayout } from "@/components/layouts/MainLayout"
 import { ContentDetail } from "@/components/shared/ContentDetail"
-import { useAcademicCalendarDetail } from "@/components/kalender-akademik/hooks/useAcademicCalendarData"
-import { BookOpen } from "lucide-react"
+import { eventsApi } from "@/functions/api/eventsApi"
+import { useSwrFetcherWithAccessToken } from "@/functions/useSwrFetcherWithAccessToken"
+import { Event } from "@/types/Models"
 
 export default function KalenderAkademikDetail() {
   const router = useRouter()
   const { slug } = router.query
-  const { academicCalendar: cal, isLoading, error } = useAcademicCalendarDetail(
-    typeof slug === "string" ? slug : null
-  );
+  const fetcher = useSwrFetcherWithAccessToken()
+
+  const { data: ev, isLoading, error } = useSWR<Event>(
+    typeof slug === "string" ? eventsApi.keys.detail(slug) : null,
+    fetcher,
+  )
 
   const title =
-    cal?.title ||
-    (cal as any)?.Title ||
+    ev?.title ||
+    (ev as any)?.Title ||
     (typeof slug === "string"
-      ? slug.split("-").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ")
-      : "Detail Kalender Akademik")
+      ? slug.split("-").map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ")
+      : "Detail Kegiatan")
 
-  const startDate = cal?.startDate || (cal as any)?.StartDate
-  const endDate = cal?.endDate || (cal as any)?.EndDate
-  const academicYear = cal?.academicYear || (cal as any)?.AcademicYear
-  const semester = cal?.semester || (cal as any)?.Semester
-  const eventType = cal?.eventType || (cal as any)?.EventType
+  const startDate = ev?.startDate || (ev as any)?.StartDate
+  const endDate = ev?.endDate || (ev as any)?.EndDate
+  const location = ev?.location || (ev as any)?.Location
+  const featuredImageId = ev?.featuredImageId || (ev as any)?.FeaturedImageId || null
 
   const formatDate = (d: string) =>
     new Date(d).toLocaleDateString("id-ID", {
@@ -44,8 +48,8 @@ export default function KalenderAkademikDetail() {
     return <div className="p-20 text-center text-muted-foreground">Memuat Konten...</div>
   }
 
-  if (error || (!isLoading && !cal)) {
-    return <div className="p-20 text-center text-red-500">Kalender tidak ditemukan</div>
+  if (error || (!isLoading && !ev)) {
+    return <div className="p-20 text-center text-red-500">Kegiatan tidak ditemukan</div>
   }
 
   return (
@@ -54,34 +58,19 @@ export default function KalenderAkademikDetail() {
       <ContentDetail
         title={title}
         date={dateLabel}
-        image="/placeholders/kalender-hero.jpg"
+        image={featuredImageId ? `/api/media-file/${featuredImageId}` : "/placeholders/kalender-hero.jpg"}
         backPath="kalender-akademik"
         backLabel="Kembali ke Kalender Akademik"
         content={
           <div>
-            {(academicYear || semester || eventType) && (
-              <div className="flex flex-wrap items-center gap-2 mb-6 not-prose">
-                <BookOpen className="w-4 h-4 shrink-0 text-muted-foreground" />
-                {academicYear && (
-                  <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-sm font-medium">
-                    {academicYear}
-                  </span>
-                )}
-                {semester && (
-                  <span className="px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground text-sm font-medium">
-                    {semester}
-                  </span>
-                )}
-                {eventType && (
-                  <span className="px-2 py-0.5 rounded-full bg-muted text-muted-foreground text-sm font-medium">
-                    {eventType}
-                  </span>
-                )}
-              </div>
+            {location && (
+              <p className="text-sm text-muted-foreground mb-4">
+                📍 {location}
+              </p>
             )}
             <div
               dangerouslySetInnerHTML={{
-                __html: cal?.description || (cal as any)?.Description || "",
+                __html: ev?.description || (ev as any)?.Description || "",
               }}
             />
           </div>

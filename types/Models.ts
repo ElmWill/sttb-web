@@ -80,6 +80,8 @@ export interface PostListItem {
     categories: string[];
     publishedAt?: string;
     createdAt: string;
+    featuredImageId?: number;
+    featuredImageUrl?: string;
     // PascalCase fallbacks
     PostId?: number;
     Title?: string;
@@ -87,6 +89,8 @@ export interface PostListItem {
     AuthorName?: string;
     PublishedAt?: string;
     CreatedAt?: string;
+    FeaturedImageId?: number;
+    FeaturedImageUrl?: string;
 }
 
 export interface Category {
@@ -235,6 +239,7 @@ export interface EventListItem {
     startDate: string;
     endDate?: string;
     featuredImageId?: number;
+    featuredImageUrl?: string;
     status: string;
     createdAt: string;
     // PascalCase fallbacks
@@ -244,6 +249,7 @@ export interface EventListItem {
     Location?: string;
     StartDate?: string;
     EndDate?: string;
+    FeaturedImageUrl?: string;
     Status?: string;
     CreatedAt?: string;
 }

@@ -56,7 +56,7 @@ export const UpcomingEvents = () => {
           className="mb-0"
         />
         <Button variant="ghost" className="mt-4 md:mt-0 flex items-center gap-2" asChild>
-          <Link href="/kegiatan">
+          <Link href="/kalender-akademik">
             Lihat Semua Kegiatan <ArrowRight className="w-4 h-4" />
           </Link>
         </Button>
@@ -72,7 +72,7 @@ export const UpcomingEvents = () => {
               </div>
               <div className="p-4 flex-1 min-w-0">
                 {event.slug ? (
-                  <Link href={`/kegiatan/${event.slug}`}>
+                  <Link href={`/kalender-akademik`}>
                     <h3 className="font-semibold text-lg line-clamp-1 mb-2 hover:text-primary transition-colors">
                       {event.title}
                     </h3>
