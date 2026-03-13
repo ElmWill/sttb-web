@@ -3,7 +3,7 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
-import { Menu, X, ChevronDown, GraduationCap, BookOpen, HeartHandshake, Users, Info, LogIn, LogOut, LayoutDashboard } from "lucide-react"
+import { Menu, X, ChevronDown, GraduationCap, BookOpen, HeartHandshake, Users, Info, LogIn, LogOut, LayoutDashboard, CalendarDays, CalendarRange } from "lucide-react"
 import { useAuth } from "@/contexts/AuthContext"
 import { usePermission } from "@/contexts/PermissionContext"
 
@@ -38,6 +38,14 @@ export const Navbar = () => {
       value: "tentang",
       label: "Tentang Kami",
       icon: <Info className="h-5 w-5 mb-2 text-primary/80" />,
+      mobileLinks: [
+        { href: "/tentang", label: "Profil STTB", desc: "Mengenal STTB lebih dekat" },
+        { href: "/tentang/sejarah", label: "Sejarah", desc: "Perjalanan STTB dari masa ke masa" },
+        { href: "/tentang/visi-misi", label: "Visi & Misi", desc: "Arah dan tujuan institusi" },
+        { href: "/tentang/pengakuan-iman", label: "Pengakuan Iman", desc: "Dasar teologis STTB" },
+        { href: "/tentang/pendiri", label: "Pendiri", desc: "Tokoh di balik berdirinya STTB" },
+        { href: "/tentang/mars", label: "Mars STTB", desc: "Lagu kebanggaan almamater" },
+      ],
       content: (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
           <div className="col-span-1 border-r border-border pr-6">
@@ -82,6 +90,13 @@ export const Navbar = () => {
       value: "akademik",
       label: "Akademik",
       icon: <GraduationCap className="h-5 w-5 mb-2 text-primary/80" />,
+      mobileLinks: [
+        { href: "/akademik", label: "Info Akademik", desc: "Gambaran umum akademik STTB" },
+        { href: "/akademik/sarjana", label: "Program Sarjana (S1)", desc: "S.Th., S.Ag." },
+        { href: "/akademik/magister", label: "Program Magister (S2)", desc: "M.Th., M.Ag." },
+        { href: "/akademik/doktoral", label: "Program Doktoral (S3)", desc: "D.Th." },
+        { href: "/kalender-akademik", label: "Kalender Akademik", desc: "Jadwal kegiatan perkuliahan" },
+      ],
       content: (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
           <div className="col-span-1 border-r border-border pr-6">
@@ -109,11 +124,12 @@ export const Navbar = () => {
                 <div className="font-medium group-hover:text-primary transition-colors">Program Doktoral (S3)</div>
                 <div className="text-xs text-muted-foreground mt-1">D.Th.</div>
               </Link>
-              <Link href="/akademik/kalender" className="block p-2 -mx-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors group">
-                <div className="flex items-center gap-2">
-                   <span className="font-medium group-hover:text-primary transition-colors">Kalender Akademik</span>
+              <Link href="/kalender-akademik" className="block p-2 -mx-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors group">
+                <div className="flex items-center gap-1.5">
+                  <CalendarRange className="h-3.5 w-3.5 text-primary/70 shrink-0" />
+                  <span className="font-medium group-hover:text-primary transition-colors">Kalender Akademik</span>
                 </div>
-                <div className="text-xs text-muted-foreground mt-1">Jadwal kegiatan perkuliahan</div>
+                <div className="text-xs text-muted-foreground mt-1">Jadwal kegiatan perkuliahan & UTS/UAS</div>
               </Link>
             </div>
           </div>
@@ -124,6 +140,12 @@ export const Navbar = () => {
       value: "admisi",
       label: "Admisi",
       icon: <BookOpen className="h-5 w-5 mb-2 text-primary/80" />,
+      mobileLinks: [
+        { href: "/admisi/prosedur", label: "Prosedur", desc: "Langkah-langkah pendaftaran" },
+        { href: "/admisi/jadwal", label: "Jadwal Admisi", desc: "Gelombang & tanggal penting" },
+        { href: "/admisi/persyaratan", label: "Persyaratan", desc: "Dokumen yang dibutuhkan" },
+        { href: "/admisi/faq", label: "FAQ", desc: "Pertanyaan yang sering diajukan" },
+      ],
       content: (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
           <div className="col-span-1 border-r border-border pr-6">
@@ -164,6 +186,11 @@ export const Navbar = () => {
       value: "keuangan",
       label: "Keuangan",
       icon: <HeartHandshake className="h-5 w-5 mb-2 text-primary/80" />,
+      mobileLinks: [
+        { href: "/keuangan/biaya-studi", label: "Biaya Studi", desc: "Rincian biaya pendidikan" },
+        { href: "/keuangan/beasiswa", label: "Beasiswa", desc: "Program bantuan finansial" },
+        { href: "/keuangan/dukung", label: "Dukung STTB", desc: "Menjadi mitra pelayanan kami" },
+      ],
       content: (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
           <div className="col-span-1 border-r border-border pr-6">
@@ -200,6 +227,14 @@ export const Navbar = () => {
       value: "kehidupan",
       label: "Kehidupan Kampus",
       icon: <Users className="h-5 w-5 mb-2 text-primary/80" />,
+      mobileLinks: [
+        { href: "/kehidupan-kampus", label: "Kehidupan Kampus", desc: "Pengalaman kampus STTB" },
+        { href: "/kehidupan-kampus/fasilitas", label: "Fasilitas", desc: "Sarana prasarana kampus" },
+        { href: "/kehidupan-kampus/pembinaan", label: "Pembinaan Spiritual", desc: "Kegiatan rohani mahasiswa" },
+        { href: "/kehidupan-kampus/senat", label: "Senat Mahasiswa", desc: "Organisasi kemahasiswaan" },
+        { href: "/kegiatan", label: "Kegiatan Kampus", desc: "Agenda & acara kampus" },
+        { href: "/berita", label: "Berita", desc: "Kabar terkini dari STTB" },
+      ],
       content: (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
           <div className="col-span-1 border-r border-border pr-6">
@@ -221,11 +256,22 @@ export const Navbar = () => {
                 <div className="font-medium group-hover:text-primary transition-colors">Pembinaan Spiritual</div>
                 <div className="text-xs text-muted-foreground mt-1">Kegiatan rohani mahasiswa</div>
               </Link>
-            </div>
-             <div className="space-y-3">
               <Link href="/kehidupan-kampus/senat" className="block p-2 -mx-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors group">
                 <div className="font-medium group-hover:text-primary transition-colors">Senat Mahasiswa</div>
                 <div className="text-xs text-muted-foreground mt-1">Organisasi kemahasiswaan</div>
+              </Link>
+            </div>
+            <div className="space-y-3">
+              <Link href="/kegiatan" className="block p-2 -mx-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors group">
+                <div className="flex items-center gap-1.5">
+                  <CalendarDays className="h-3.5 w-3.5 text-primary/70 shrink-0" />
+                  <span className="font-medium group-hover:text-primary transition-colors">Kegiatan Kampus</span>
+                </div>
+                <div className="text-xs text-muted-foreground mt-1">Agenda & acara kampus STTB</div>
+              </Link>
+              <Link href="/berita" className="block p-2 -mx-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors group">
+                <div className="font-medium group-hover:text-primary transition-colors">Berita</div>
+                <div className="text-xs text-muted-foreground mt-1">Kabar terkini dari STTB</div>
               </Link>
             </div>
           </div>
@@ -352,12 +398,18 @@ export const Navbar = () => {
                 {item.icon}
                 <span>{item.label}</span>
               </div>
-              <div className="grid gap-3 pl-8">
-                {/* Find links dynamically from the content if possible, or we could duplicate the links structure.  
-                    For now, I will add generic links for mobile so it looks good. */}
-                <Link href={`/${item.value}`} className="block py-1 text-muted-foreground hover:text-foreground font-medium" onClick={() => setIsMobileMenuOpen(false)}>
-                  Overview {item.label}
-                </Link>
+              <div className="grid gap-1 pl-4">
+                {item.mobileLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="block py-2 px-3 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors group"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <div className="font-medium text-sm group-hover:text-primary transition-colors">{link.label}</div>
+                    <div className="text-xs text-muted-foreground">{link.desc}</div>
+                  </Link>
+                ))}
               </div>
             </div>
           ))}

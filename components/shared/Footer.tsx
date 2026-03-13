@@ -24,7 +24,8 @@ export const Footer = () => {
             <li><Link href="/admisi" className="hover:text-white">Admisi</Link></li>
             <li><Link href="/keuangan/biaya-studi" className="hover:text-white">Biaya Studi</Link></li>
             <li><Link href="/berita" className="hover:text-white">Berita</Link></li>
-            <li><Link href="/kegiatan" className="hover:text-white">Kegiatan</Link></li>
+            <li><Link href="/kegiatan" className="hover:text-white">Kegiatan Kampus</Link></li>
+            <li><Link href="/kalender-akademik" className="hover:text-white">Kalender Akademik</Link></li>
           </ul>
         </div>
         <div>

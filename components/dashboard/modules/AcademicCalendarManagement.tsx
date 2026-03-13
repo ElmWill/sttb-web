@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useAcademicCalendarData } from "../hooks/useAcademicCalendarData";
+import { useAuth } from "@/contexts/AuthContext";
 import { BackendApiUrl } from "@/functions/BackendApiUrl";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
@@ -9,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import {
   Plus, Search, Edit2, Trash2, Loader2, Eye,
-  ChevronLeft, ChevronRight, CalendarDays,
+  Image as ImageIcon, X, ChevronLeft, ChevronRight, CalendarDays,
 } from "lucide-react";
 
 function toSlug(title: string) {
@@ -33,6 +34,8 @@ interface AcademicCalendarForm {
   startDate: string;
   endDate: string;
   status: string;
+  featuredImageId: number | null;
+  featuredImageUrl: string | null;
 }
 
 const emptyForm: AcademicCalendarForm = {
@@ -45,6 +48,8 @@ const emptyForm: AcademicCalendarForm = {
   startDate: "",
   endDate: "",
   status: "published",
+  featuredImageId: null,
+  featuredImageUrl: null,
 };
 
 export default function AcademicCalendarManagement() {
@@ -53,6 +58,7 @@ export default function AcademicCalendarManagement() {
   const [search, setSearch] = useState("");
   const { data, totalCount, isLoading, actions, isCreating, isUpdating, isDeleting } =
     useAcademicCalendarData(page, search);
+  const { user } = useAuth();
 
   // Debounce search
   useEffect(() => {
@@ -65,6 +71,8 @@ export default function AcademicCalendarManagement() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [form, setForm] = useState<AcademicCalendarForm>(emptyForm);
   const [isFetchingDetail, setIsFetchingDetail] = useState(false);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const imageInputRef = useRef<HTMLInputElement>(null);
 
   // Auto-slug from title only when creating
   useEffect(() => {
@@ -99,6 +107,8 @@ export default function AcademicCalendarManagement() {
         startDate: toDateLocal(cal.startDate || cal.StartDate),
         endDate: toDateLocal(cal.endDate || cal.EndDate),
         status: cal.status || cal.Status || "published",
+        featuredImageId: cal.featuredImageId || cal.FeaturedImageId || null,
+        featuredImageUrl: cal.featuredImageUrl || cal.FeaturedImageUrl || null,
       });
     } catch {
       alert("Gagal memuat data kalender akademik.");
@@ -106,6 +116,35 @@ export default function AcademicCalendarManagement() {
     } finally {
       setIsFetchingDetail(false);
     }
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+    setIsUploadingImage(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("uploadedBy", user.userId.toString());
+      const res = await fetch(BackendApiUrl.uploadMedia, {
+        method: "POST",
+        headers: user.token ? { Authorization: `Bearer ${user.token}` } : {},
+        body: fd,
+      });
+      if (!res.ok) throw new Error("upload failed");
+      const { mediaId, fileUrl } = await res.json();
+      setForm((f) => ({ ...f, featuredImageId: mediaId, featuredImageUrl: fileUrl }));
+    } catch {
+      alert("Gagal mengunggah gambar.");
+    } finally {
+      setIsUploadingImage(false);
+      if (imageInputRef.current) imageInputRef.current.value = "";
+    }
+  };
+
+  const resolveImgSrc = (url: string) => {
+    if (url.startsWith("http") || url.startsWith("/")) return url;
+    return `/uploads/${url}`;
   };
 
   const handleSubmit = async () => {
@@ -121,6 +160,7 @@ export default function AcademicCalendarManagement() {
       startDate: form.startDate ? new Date(form.startDate).toISOString() : null,
       endDate: form.endDate ? new Date(form.endDate).toISOString() : null,
       status: form.status,
+      featuredImageId: form.featuredImageId,
     };
     const ok = editingId
       ? await actions.onUpdate(editingId, payload)
@@ -388,6 +428,47 @@ export default function AcademicCalendarManagement() {
                   <option value="archived">Archived</option>
                 </select>
               </div>
+
+              {/* Featured Image */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Gambar Utama</label>
+                <input ref={imageInputRef} type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+                {(form.featuredImageId || form.featuredImageUrl) ? (
+                  <div className="relative w-full h-40 rounded-md overflow-hidden border bg-muted group">
+                    <img
+                      src={form.featuredImageId
+                        ? `/api/media-file/${form.featuredImageId}`
+                        : resolveImgSrc(form.featuredImageUrl!)}
+                      alt="Featured"
+                      className="w-full h-full object-cover"
+                    />
+                    <button
+                      type="button"
+                      className="absolute top-2 right-2 bg-destructive text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                      onClick={() => setForm((f) => ({ ...f, featuredImageId: null, featuredImageUrl: null }))}
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </div>
+                ) : (
+                  <div
+                    className="w-full h-32 rounded-md border-2 border-dashed border-muted-foreground/30 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-primary/50 hover:bg-muted/50 transition-colors"
+                    onClick={() => !isUploadingImage && imageInputRef.current?.click()}
+                  >
+                    {isUploadingImage ? (
+                      <><Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /><span className="text-sm text-muted-foreground">Mengunggah...</span></>
+                    ) : (
+                      <><ImageIcon className="w-6 h-6 text-muted-foreground/50" /><span className="text-sm text-muted-foreground">Klik untuk unggah gambar utama</span></>
+                    )}
+                  </div>
+                )}
+                {(form.featuredImageId || form.featuredImageUrl) && (
+                  <Button type="button" variant="outline" size="sm" onClick={() => imageInputRef.current?.click()} disabled={isUploadingImage}>
+                    {isUploadingImage ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <ImageIcon className="w-4 h-4 mr-2" />}
+                    Ganti Gambar
+                  </Button>
+                )}
+              </div>
             </div>
           )}
 
@@ -397,7 +478,7 @@ export default function AcademicCalendarManagement() {
             </Button>
             <Button
               onClick={handleSubmit}
-              disabled={isCreating || isUpdating || isFetchingDetail}
+              disabled={isCreating || isUpdating || isFetchingDetail || isUploadingImage}
             >
               {(isCreating || isUpdating) && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
               {editingId ? "Simpan Perubahan" : "Buat Item Kalender"}

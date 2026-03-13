@@ -259,6 +259,8 @@ export interface AcademicCalendar {
     startDate: string;
     endDate?: string;
     status: string;
+    featuredImageId?: number;
+    featuredImageUrl?: string;
     createdBy?: number;
     updatedBy?: number;
     createdAt: string;
@@ -274,6 +276,8 @@ export interface AcademicCalendar {
     StartDate?: string;
     EndDate?: string;
     Status?: string;
+    FeaturedImageId?: number;
+    FeaturedImageUrl?: string;
     CreatedAt?: string;
 }
 
@@ -288,6 +292,8 @@ export interface AcademicCalendarListItem {
     startDate: string;
     endDate?: string;
     status: string;
+    featuredImageId?: number;
+    featuredImageUrl?: string;
     createdAt: string;
     // PascalCase fallbacks
     AcademicCalendarId?: number;
@@ -299,6 +305,8 @@ export interface AcademicCalendarListItem {
     StartDate?: string;
     EndDate?: string;
     Status?: string;
+    FeaturedImageId?: number;
+    FeaturedImageUrl?: string;
     CreatedAt?: string;
 }
 
