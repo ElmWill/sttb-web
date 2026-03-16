@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
+import Link from "next/link";
 import { PageContainer } from "@/components/layouts/PageContainer";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { FileText, Users, Calendar, LayoutDashboard, UserPlus, BookOpen, GraduationCap, Image as ImageIcon, CalendarRange } from "lucide-react";
+import { FileText, Users, Calendar, LayoutDashboard, UserPlus, BookOpen, GraduationCap, Image as ImageIcon, CalendarRange, ExternalLink, Newspaper, Globe } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProtectedRoute from "../auth/ProtectedRoute";
 import PostManagement from "./modules/PostManagement";
@@ -14,6 +15,7 @@ import EventManagement from "./modules/EventManagement";
 import { usePostData } from "./hooks/usePostData";
 import { useEventData } from "./hooks/useEventData";
 import { useMediaData } from "./hooks/useMediaData";
+import { usePostList } from "@/components/berita/hooks/usePostData";
 
 const StatCard = ({
   title,
@@ -40,9 +42,11 @@ const StatCard = ({
 );
 
 export default function DashboardFeature() {
+  const [activeTab, setActiveTab] = useState("overview");
   const { totalCount: postCount, isLoading: postsLoading } = usePostData(1);
   const { totalCount: eventCount, isLoading: eventsLoading } = useEventData(1);
   const { totalCount: mediaCount, isLoading: mediaLoading } = useMediaData(1);
+  const { posts: recentPosts, isLoading: recentPostsLoading } = usePostList(1);
 
   return (
     <ProtectedRoute allowedRoles={["admin", "superadmin"]}>
@@ -55,7 +59,7 @@ export default function DashboardFeature() {
             />
           </div>
 
-          <Tabs defaultValue="overview" className="space-y-6">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
             <TabsList className="bg-background border p-1 h-auto flex-wrap justify-start">
               <TabsTrigger value="overview" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground py-2 px-4">
                 <LayoutDashboard className="w-4 h-4 mr-2" />
@@ -98,45 +102,77 @@ export default function DashboardFeature() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Aktivitas Terbaru</CardTitle>
+                    <CardTitle>Postingan Terbaru</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-4">
-                      {[1, 2, 3, 4].map((i) => (
-                        <div
-                          key={i}
-                          className="flex items-center gap-4 py-3 border-b last:border-0"
-                        >
-                          <div className="w-2 h-2 rounded-full bg-primary" />
-                          <div className="flex-1">
-                            <p className="text-sm font-medium">
-                              Admin memperbarui artikel Berita
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              {i * 2} jam yang lalu
-                            </p>
+                    <div className="space-y-1">
+                      {recentPostsLoading && (
+                        <p className="text-sm text-muted-foreground py-4">Memuat...</p>
+                      )}
+                      {!recentPostsLoading && recentPosts.length === 0 && (
+                        <p className="text-sm text-muted-foreground py-4">Belum ada postingan yang dipublikasikan.</p>
+                      )}
+                      {recentPosts.slice(0, 5).map((post) => {
+                        const date = post.publishedAt || post.PublishedAt || post.createdAt || post.CreatedAt;
+                        const title = post.title || (post as any).Title || "-";
+                        return (
+                          <div key={post.postId || (post as any).PostId} className="flex items-start gap-3 py-3 border-b last:border-0">
+                            <div className="w-2 h-2 rounded-full bg-primary mt-1.5 shrink-0" />
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium line-clamp-1">{title}</p>
+                              <p className="text-xs text-muted-foreground">
+                                {date ? new Date(date).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" }) : ""}
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </CardContent>
                 </Card>
 
                 <Card>
                   <CardHeader>
-                    <CardTitle>Akses Cepat</CardTitle>
+                    <CardTitle>Lihat di Situs</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="flex flex-col gap-3">
-                      <button className="text-left px-4 py-3 rounded-md bg-muted/50 hover:bg-muted font-medium text-sm transition-colors text-muted-foreground">
-                        Kelola Pendaftar Admisi (Soon)
-                      </button>
-                      <button className="text-left px-4 py-3 rounded-md bg-muted/50 hover:bg-muted font-medium text-sm transition-colors text-muted-foreground">
-                        Tambah Berita Baru (Soon)
-                      </button>
-                      <button className="text-left px-4 py-3 rounded-md bg-muted/50 hover:bg-muted font-medium text-sm transition-colors text-muted-foreground">
-                        Tinjau Pengumuman (Soon)
-                      </button>
+                      <Link
+                        href="/berita"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-between px-4 py-3 rounded-md bg-muted/50 hover:bg-muted font-medium text-sm transition-colors group"
+                      >
+                        <span className="flex items-center gap-2"><Newspaper className="w-4 h-4 text-muted-foreground" />Halaman Berita</span>
+                        <ExternalLink className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground transition-colors" />
+                      </Link>
+                      <Link
+                        href="/kalender-akademik"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-between px-4 py-3 rounded-md bg-muted/50 hover:bg-muted font-medium text-sm transition-colors group"
+                      >
+                        <span className="flex items-center gap-2"><CalendarRange className="w-4 h-4 text-muted-foreground" />Kalender Akademik</span>
+                        <ExternalLink className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground transition-colors" />
+                      </Link>
+                      <Link
+                        href="/admisi/prosedur"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-between px-4 py-3 rounded-md bg-muted/50 hover:bg-muted font-medium text-sm transition-colors group"
+                      >
+                        <span className="flex items-center gap-2"><BookOpen className="w-4 h-4 text-muted-foreground" />Halaman Admisi</span>
+                        <ExternalLink className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground transition-colors" />
+                      </Link>
+                      <Link
+                        href="/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-between px-4 py-3 rounded-md bg-muted/50 hover:bg-muted font-medium text-sm transition-colors group"
+                      >
+                        <span className="flex items-center gap-2"><Globe className="w-4 h-4 text-muted-foreground" />Beranda Utama</span>
+                        <ExternalLink className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground transition-colors" />
+                      </Link>
                     </div>
                   </CardContent>
                 </Card>

@@ -289,12 +289,12 @@ export const Navbar = () => {
                 <div className="font-medium group-hover:text-primary transition-colors">Pembinaan Spiritual</div>
                 <div className="text-xs text-muted-foreground mt-1">Kegiatan rohani mahasiswa</div>
               </Link>
+            </div>
+            <div className="space-y-3">
               <Link href="/kehidupan-kampus/senat" className="block p-2 -mx-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors group">
                 <div className="font-medium group-hover:text-primary transition-colors">Senat Mahasiswa</div>
                 <div className="text-xs text-muted-foreground mt-1">Organisasi kemahasiswaan</div>
               </Link>
-            </div>
-            <div className="space-y-3">
               <Link href="/berita" className="block p-2 -mx-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors group">
                 <div className="font-medium group-hover:text-primary transition-colors">Berita</div>
                 <div className="text-xs text-muted-foreground mt-1">Kabar terkini dari STTB</div>

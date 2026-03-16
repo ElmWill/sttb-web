@@ -59,6 +59,7 @@ export default function KalenderAkademikDetail() {
         title={title}
         date={dateLabel}
         image={featuredImageId ? `/api/media-file/${featuredImageId}` : "/placeholders/kalender-hero.jpg"}
+        imageMode="poster"
         backPath="kalender-akademik"
         backLabel="Kembali ke Kalender Akademik"
         content={
