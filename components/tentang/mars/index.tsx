@@ -31,7 +31,11 @@ export default function MarsFeature() {
             </h2>
 
             <audio controls className="w-full">
-              <source src="/audio/mars-sttb.mp3" type="audio/mpeg" />
+              <source
+                // Place Holder untuk STTB Mars di ambil dari : https://www.youtube.com/watch?v=2v6ShmKAcVM
+                src="/audio/Pujian Mahasiswa STTB - Here I am Lord Utuslah Aku Tuhan.mp3"
+                type="audio/mpeg"
+              />
               Browser Anda tidak mendukung audio player.
             </audio>
           </CardContent>
