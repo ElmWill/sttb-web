@@ -11,6 +11,10 @@ import { z } from "zod";
 
 const schema = z.object({
   courseName: z.string().min(1, "Nama mata kuliah wajib diisi"),
+  credits: z.preprocess(
+    (val) => (val === "" || val === undefined || val === null ? undefined : Number(val)),
+    z.number().min(0, "SKS minimal 0").optional()
+  ),
   description: z.string().optional(),
 });
 
@@ -35,13 +39,14 @@ export default function CourseManagement() {
   const [editingCourse, setEditingCourse] = useState<any>(null);
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema) as any,
   });
 
   const openCreateDialog = () => {
     setEditingCourse(null);
     reset({
       courseName: "",
+      credits: undefined,
       description: "",
     });
     setIsDialogOpen(true);
@@ -51,6 +56,7 @@ export default function CourseManagement() {
     setEditingCourse(course);
     reset({
       courseName: course.courseName,
+      credits: course.credits ?? (course as any).Credits,
       description: course.description || "",
     });
     setIsDialogOpen(true);
@@ -106,6 +112,7 @@ export default function CourseManagement() {
           <TableHeader>
             <TableRow>
               <TableHead>Nama Mata Kuliah</TableHead>
+              <TableHead>SKS</TableHead>
               <TableHead>Deskripsi</TableHead>
               <TableHead className="text-right">Aksi</TableHead>
             </TableRow>
@@ -113,7 +120,7 @@ export default function CourseManagement() {
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={3} className="h-24 text-center">
+                <TableCell colSpan={4} className="h-24 text-center">
                   <div className="flex items-center justify-center gap-2">
                     <Loader2 className="w-4 h-4 animate-spin" />
                     Memuat data...
@@ -122,7 +129,7 @@ export default function CourseManagement() {
               </TableRow>
             ) : data.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={3} className="h-24 text-center">
+                <TableCell colSpan={4} className="h-24 text-center">
                   Tidak ada mata kuliah ditemukan.
                 </TableCell>
               </TableRow>
@@ -130,6 +137,7 @@ export default function CourseManagement() {
               data.map((course) => (
                 <TableRow key={course.courseId}>
                   <TableCell className="font-medium">{course.courseName}</TableCell>
+                  <TableCell>{course.credits ?? (course as any).Credits ?? "-"}</TableCell>
                   <TableCell className="max-w-xs truncate">{course.description}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
@@ -180,6 +188,11 @@ export default function CourseManagement() {
               <label className="text-sm font-medium">Nama Mata Kuliah</label>
               <Input {...register("courseName")} placeholder="Contoh: Sejarah Gereja" />
               {errors.courseName && <p className="text-xs text-destructive">{errors.courseName.message}</p>}
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">SKS</label>
+              <Input type="number" min={0} {...register("credits")} placeholder="Contoh: 3" />
+              {errors.credits && <p className="text-xs text-destructive">{errors.credits.message as string}</p>}
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">Deskripsi</label>

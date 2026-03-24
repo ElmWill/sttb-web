@@ -153,9 +153,11 @@ export interface CourseListItem {
     courseId: number;
     courseName: string;
     description?: string;
+    credits?: number;
     // PascalCase fallbacks
     CourseId?: number;
     CourseName?: string;
+    Credits?: number;
 }
 
 export interface StudyProgram {
@@ -335,6 +337,7 @@ export interface PagedResult<T> {
     Posts?: T[];
     Programs?: T[];
     Pages?: T[];
+    Courses?: T[];
     Events?: T[];
     AcademicCalendars?: T[];
     TotalCount?: number;

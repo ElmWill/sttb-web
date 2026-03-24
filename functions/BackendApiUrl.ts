@@ -71,6 +71,7 @@ export const BackendApiUrl = {
 
   // Courses
   getCourseList: baseUrl + "/api/Courses/list",
+  getCourseCategoryList: baseUrl + "/api/CourseCategories/list",
   createCourse: baseUrl + "/api/Courses/create",
   updateCourse: baseUrl + "/api/Courses/update",
   deleteCourse: baseUrl + "/api/Courses", // DELETE /{courseId}

@@ -80,8 +80,8 @@ export const useStudyProgramData = (page: number, search?: string): UseStudyProg
   }, [fetchDELETE, mutate]);
 
   return {
-    data: response?.programs || response?.items || [],
-    totalCount: response?.totalCount || 0,
+    data: response?.programs || response?.Programs || response?.items || response?.Items || [],
+    totalCount: response?.totalCount || response?.TotalCount || 0,
     isLoading,
     error,
     actions: { onCreate, onUpdate, onDelete },

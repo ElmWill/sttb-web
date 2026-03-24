@@ -80,8 +80,8 @@ export const useCourseData = (page: number, search?: string): UseCourseDataRetur
   }, [fetchDELETE, mutate]);
 
   return {
-    data: response?.courses || response?.items || [],
-    totalCount: response?.totalCount || 0,
+    data: response?.courses || response?.Courses || response?.items || response?.Items || [],
+    totalCount: response?.totalCount || response?.TotalCount || 0,
     isLoading,
     error,
     actions: { onCreate, onUpdate, onDelete },

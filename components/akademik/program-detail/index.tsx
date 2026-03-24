@@ -39,7 +39,7 @@ export default function ProgramDetailFeature({
     category: cat.categoryName || cat.CategoryName,
     courses: (cat.courses || cat.Courses || []).map((course: any) => ({
       name: course.courseName || course.CourseName,
-      credits: course.credits || course.Credits,
+      credits: course.credits ?? course.Credits ?? 0,
     })),
   }));
 
