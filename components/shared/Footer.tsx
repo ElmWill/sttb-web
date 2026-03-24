@@ -30,7 +30,7 @@ export const Footer = () => {
         <div>
           <h4 className="font-semibold mb-4 text-white">Hubungi Kami</h4>
           <ul className="space-y-2 text-sm text-secondary-foreground/80">
-            <li>Jl. Pasirkaliki No. 199, Bandung</li>
+            <li>Jl. Dr. Junjunan No. 105, Bandung</li>
             <li>info@sttb.ac.id</li>
             <li>(022) 123-4567</li>
           </ul>
