@@ -7,7 +7,7 @@ export const Footer = () => {
         <div className="space-y-4">
           <h3 className="font-bold text-lg">Sekolah Tinggi Teologi Bandung</h3>
           <p className="text-sm text-secondary-foreground/80">
-            Mempersiapkan pelayan Tuhan yang setia, berintegritas, dan berkompeten.
+            Menjadi institusi pendidikan teologi yang mempersiapkan pastor-scholar yang transformatif dan memberdayakan seluruh umat Allah untuk menghadirkan Injil seutuhnya di tengah konteks masyarakat urban
           </p>
         </div>
         <div>

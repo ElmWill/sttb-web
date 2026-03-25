@@ -15,10 +15,10 @@ export const HeroSection = () => {
       <div className="container mx-auto px-4 z-20">
         <div className="max-w-3xl space-y-6">
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight">
-            Membangun Pelayan Tuhan yang Berintegritas
+            Bandung Theological Seminary
           </h1>
           <p className="text-xl text-white/90 max-w-2xl">
-            Sekolah Tinggi Teologi Bandung berkomitmen untuk memperlengkapi setiap pribadi menjadi hamba Tuhan yang siap melayani di berbagai bidang dengan landasan teologi yang kuat.
+            Menjadi institusi pendidikan teologi yang mempersiapkan pastor-scholar yang transformatif dan memberdayakan seluruh umat Allah untuk menghadirkan Injil seutuhnya di tengah konteks masyarakat urban
           </p>
           <div className="pt-4 flex flex-col sm:flex-row gap-4">
             <Button size="lg" asChild className="text-lg">
