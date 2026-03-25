@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { PageContainer } from "@/components/layouts/PageContainer";
 import { SectionHeader } from "@/components/shared/SectionHeader";
@@ -16,6 +16,8 @@ import { usePostData } from "./hooks/usePostData";
 import { useEventData } from "./hooks/useEventData";
 import { useMediaData } from "./hooks/useMediaData";
 import { usePostList } from "@/components/berita/hooks/usePostData";
+import { useFetchWithAccessToken } from "@/functions/useFetchWithAccessToken";
+import { BackendApiUrl } from "@/functions/BackendApiUrl";
 
 const StatCard = ({
   title,
@@ -47,6 +49,60 @@ export default function DashboardFeature() {
   const { totalCount: eventCount, isLoading: eventsLoading } = useEventData(1);
   const { totalCount: mediaCount, isLoading: mediaLoading } = useMediaData(1);
   const { posts: recentPosts, isLoading: recentPostsLoading } = usePostList(1);
+  const { fetchGET } = useFetchWithAccessToken();
+  const [nonAdminUserCount, setNonAdminUserCount] = useState(0);
+  const [isLoadingNonAdminUserCount, setIsLoadingNonAdminUserCount] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadNonAdminUsers = async () => {
+      setIsLoadingNonAdminUserCount(true);
+      try {
+        let pageNumber = 1;
+        const pageSize = 50;
+        let totalCount = 0;
+        let aggregatedCount = 0;
+
+        while (true) {
+          const query = new URLSearchParams({
+            pageNumber: pageNumber.toString(),
+            pageSize: pageSize.toString(),
+          });
+
+          const { data: response, error } = await fetchGET<any>(`${BackendApiUrl.getUserList}?${query.toString()}`);
+          if (error || !response) break;
+
+          const users = response.users || response.Users || [];
+          totalCount = response.totalCount || response.TotalCount || 0;
+
+          aggregatedCount += users.filter((u: any) => {
+            const roleName = (u.roleName || u.RoleName || "").toLowerCase();
+            return roleName !== "admin" && roleName !== "super_admin";
+          }).length;
+
+          if (users.length === 0 || pageNumber * pageSize >= totalCount) {
+            break;
+          }
+
+          pageNumber += 1;
+        }
+
+        if (isMounted) {
+          setNonAdminUserCount(aggregatedCount);
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoadingNonAdminUserCount(false);
+        }
+      }
+    };
+
+    void loadNonAdminUsers();
+    return () => {
+      isMounted = false;
+    };
+  }, [fetchGET]);
 
   return (
     <ProtectedRoute allowedRoles={["admin", "superadmin"]}>
@@ -94,7 +150,7 @@ export default function DashboardFeature() {
             <TabsContent value="overview" className="space-y-8 animate-in fade-in-50 duration-500">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <StatCard title="Total Berita" count={postsLoading ? "..." : postCount} icon={FileText} />
-                <StatCard title="Pendaftar Baru" count="-" icon={Users} />
+                <StatCard title="Pendaftar Baru" count={isLoadingNonAdminUserCount ? "..." : nonAdminUserCount} icon={Users} />
                 <StatCard title="Total Kegiatan" count={eventsLoading ? "..." : eventCount} icon={Calendar} />
                 <StatCard title="Publikasi Media" count={mediaLoading ? "..." : mediaCount} icon={ImageIcon} />
               </div>

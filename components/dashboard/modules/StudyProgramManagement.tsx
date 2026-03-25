@@ -464,16 +464,16 @@ export default function StudyProgramManagement() {
                       return (
                         <label
                           key={courseId}
-                          className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-3 py-2 hover:bg-muted/40 cursor-pointer"
+                          className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 px-3 py-2 hover:bg-muted/40 cursor-pointer"
                         >
-                          <div className="flex items-center gap-3 min-w-0">
+                          <div className="flex items-start gap-3 min-w-0">
                             <input
                               type="checkbox"
                               checked={selectedCourseIds.includes(courseId)}
                               onChange={() => toggleCourseSelection(courseId)}
                               className="h-4 w-4 rounded border-input"
                             />
-                            <span className="text-sm truncate">{courseName}</span>
+                            <span className="flex-1 min-w-0 text-sm whitespace-normal break-words leading-snug">{courseName}</span>
                           </div>
                           <div className="flex items-center gap-2 shrink-0">
                             <span className="text-xs text-muted-foreground w-12 text-right">
